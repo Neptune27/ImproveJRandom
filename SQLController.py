@@ -11,8 +11,9 @@ def connectDatabase():
         cur.execute("CREATE TABLE jpWords (id INTEGER PRIMARY KEY AUTOINCREMENT, kanji TEXT, means TEXT,\
                     englishMeanings TEXT, vietnameseMeanings TEXT, onReading TEXT, kunReadings TEXT, strokes TEXT,\
                      radicals TEXT, parts TEXT,level INT, taught TEXT)")
+        print(f'[INFO] Table jpWords will be created')
     except sql.OperationalError as ex:  # Check if table is already created
-        print(f'{ex}, expected')
+        print(f'[INFO] Table initialized')
         pass
 
     return settings, conn, cur

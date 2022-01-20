@@ -6,7 +6,7 @@ class Settings:
     def __init__(self):
         try:
             self.var = {}
-            self.jsonPath = '.\\settings.json'
+            self.jsonPath = '.\\Data\\settings.json'
             with open(self.jsonPath, 'r', encoding='UTF-8') as f:
                 rawData = f.read()
             self.var = json.loads(rawData)

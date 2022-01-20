@@ -18,8 +18,10 @@ import translateProcess
 from jsonController import Settings
 import randomWordWindow
 import progressBarUI
+import InSelectedItemsGUI
 from multiprocessing import Process, freeze_support
 from classType import japanWords
+
 
 # from importlib import reload
 
@@ -41,6 +43,8 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_File.setObjectName(u"actionIn_Selected_File")
         self.actionIn_Selected_Item_s = QAction(kanjiIndex)
         self.actionIn_Selected_Item_s.setObjectName(u"actionIn_Selected_Item_s")
+        self.actionIn_Selected_Item_s_In_File = QAction(kanjiIndex)
+        self.actionIn_Selected_Item_s_In_File.setObjectName(u"actionIn_Selected_Item_s_In_File")
         self.actionIn_Database = QAction(kanjiIndex)
         self.actionIn_Database.setObjectName(u"actionIn_Database")
 
@@ -488,6 +492,7 @@ class Ui_kanjiIndex(object):
         self.menuFile.addAction(self.actionDelete)
 
         self.menuRandom.addAction(self.actionIn_Selected_File)
+        self.menuRandom.addAction(self.actionIn_Selected_Item_s_In_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s)
         self.menuRandom.addAction(self.actionIn_Database)
 
@@ -499,8 +504,11 @@ class Ui_kanjiIndex(object):
 
     def retranslateUi(self, kanjiIndex):
         self.actionIn_Selected_File.setText(QCoreApplication.translate("kanjiIndex", u"In Selected File", None))
-        self.actionIn_Selected_Item_s.setText(QCoreApplication.translate("kanjiIndex", u"In Selected Item(s)", None))
+        self.actionIn_Selected_Item_s.setText(
+            QCoreApplication.translate("kanjiIndex", u"Selecte Item(s) in Database", None))
         self.actionIn_Database.setText(QCoreApplication.translate("kanjiIndex", u"In Database", None))
+        self.actionIn_Selected_Item_s_In_File.setText(
+            QCoreApplication.translate("kanjiIndex", u"Selecte Item(s) in Files", None))
 
         self.actionApply.setText(QCoreApplication.translate("kanjiIndex", u"Apply", None))
         self.actionReset.setText(QCoreApplication.translate("kanjiIndex", u"Reset", None))
@@ -562,7 +570,11 @@ class Ui_kanjiIndex(object):
         self.actionDelete.triggered.connect(self.deleteIndex)
 
         self.actionIn_Selected_File.triggered.connect(self.randomGetFile)
+        self.actionIn_Selected_Item_s_In_File.triggered.connect(self.randomGetFileWithSelection)
+        self.actionIn_Selected_Item_s.triggered.connect(
+            partial(self.inSelectedItemDialog, SQLController.getAllObjects()))
         self.actionIn_Database.triggered.connect(partial(self.randomWordWindow, SQLController.getAllObjects()))
+
 
     def applyTextChangedToDatabase(self):
         index = self.wordListWidget.currentIndex().row()
@@ -590,14 +602,27 @@ class Ui_kanjiIndex(object):
         self.searchBoxEditWrapper()
         self.wordListWidget.setCurrentRow(index)
 
+    def inSelectedItemDialog(self, wordList):
+        # reload(InSelectedItemsGUI)
+        try:
+            self.inSelectedWindow = QDialog()
+            self.inSelectedWindow.setAttribute(Qt.WA_DeleteOnClose)
+            self.inSelected = InSelectedItemsGUI.Ui_Selector()
+            self.inSelected.setupUi(self.inSelectedWindow)
+            self.inSelected.wordFromList = wordList
+            self.inSelected.customConnect(self)
+            self.inSelectedWindow.show()
+        except:
+            traceback.print_exc()
+
     def randomWordWindow(self, questionList):
-        if len(questionList) == 0:
+        if len(questionList) == 0 or len(questionList) == 1:
             return
         # reload(randomWordWindow)
         try:
             del self.wordRandom
         except AttributeError:
-            print('ok')
+            print('[INFO] Random Word Window First Initialized')
 
         try:
             self.wordRandomWindow = QMainWindow()
@@ -617,7 +642,7 @@ class Ui_kanjiIndex(object):
             words = words.split()
         for index in range(len(words)):
             words[index] = wordController.chineseToKanji(words[index])
-        print(words)
+        print(f"[INFO] '{words}' is currently in Search")
         # words = wordController.chineseToKanji(words)
         if words == '':
             wordList = SQLController.getAllObjects()
@@ -696,7 +721,7 @@ class Ui_kanjiIndex(object):
     def item_click(self, item):
         try:
             self.translateKanjiToUI(item.text())
-            print(self.wordListWidget.currentIndex().row())
+            print(f'[INFO] Row currently selected is: {self.wordListWidget.currentIndex().row()}')
         except AttributeError:
             pass
         # print(item.)
@@ -728,9 +753,16 @@ class Ui_kanjiIndex(object):
     def randomGetFile(self):
         inputPath = QFileDialog.getOpenFileNames()
         rawText, filteredText = self.fileToWord(", ".join(inputPath[0]), False)
-        print(rawText, filteredText)
+        print(f"[INFO] Input: '{rawText}'\n[INFO] Will be searched: {filteredText}")
         self.appendTraslated(filteredText)
         self.randomWordWindow(SQLController.removeObjectDuplicate(SQLController.getWordsObjects(rawText)))
+
+    def randomGetFileWithSelection(self):
+        inputPath = QFileDialog.getOpenFileNames()
+        rawText, filteredText = self.fileToWord(", ".join(inputPath[0]), False)
+        print(f"[INFO] Input: '{rawText}'\n[INFO] Will be searched: {filteredText}")
+        self.appendTraslated(filteredText)
+        self.inSelectedItemDialog(SQLController.removeObjectDuplicate(SQLController.getWordsObjects(rawText)))
 
     def setDatabaseLocation(self):
         settings.databaseLocation = QFileDialog.getExistingDirectory()

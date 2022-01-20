@@ -75,22 +75,12 @@
 # cho N* in từ 1 đến N, sum
 # a = range(5)
 
-def op(a, b, *args, **kwargs):
-    print(args)
-    print(kwargs)
-    print(a + b)
-    if kwargs.get('key'):
-        o = a + b
-        for i in args:
-            o += i
-        print(o)
-    else:
-        print(a + b)
-    od(**kwargs)
+class Test:
+    def __init__(self, name):
+        self.name = name
 
 
-def od(**kwargs):
-    print(f'auscn {kwargs}')
-
-
-op(2, 3, 4, 5, key=True)
+arr = [Test('二'), Test('人'), Test('一')]
+b = sorted(arr, key=lambda x: x.name)
+for i in b:
+    print(i.name)

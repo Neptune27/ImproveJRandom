@@ -42,11 +42,3 @@ class japanWords:
             return ''
 
 
-class japanWordRandom(japanWords):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
-if __name__ == '__main__':
-    a = japanWordRandom(kun='na', on='bcsiub', mean='bnsucia')
-    print(a.toArray())
