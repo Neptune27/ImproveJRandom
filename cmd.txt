@@ -70,3 +70,40 @@ if __name__ == "__main__":
     kanjiBrowserUi.customConnect()
     kanjiBrowserWindow.show()
     sys.exit(app.exec())
+
+
+    def customConnect(self):
+        self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
+
+    def prepareQuestion(self, questionList: list, **kwargs):
+        self.answerList, self.questionList = randomController.randomWordInWordList(questionList, **kwargs)
+        self.answer = [i for i in range(len(self.answerList))]
+        self.questionListView.addItems([f'Câu {i+1}' for i in range(len(self.answerList))])
+
+
+
+
+    def setTextQuestion(self, textQuestion, button: QPushButton):
+        pass
+
+    def setTextAnswer(self, textAnswer, button):
+        pass
+
+    def resizeTextToFit(self, text, button: QPushButton):
+        # print(text)
+        witdh = button.width()
+        y = len(text) * 17 / witdh
+        if y > 1:
+            chunk = ceil(y)
+            index = round(len(text) / chunk)
+            for i in range(chunk - 1):
+                starting = index * (i + 1)
+                while starting < index * (i + 2):
+                    if starting >= len(text):
+                        break
+                    if text[starting] == ' ':
+                        text = text[:starting + 1] + '\n' + text[starting + 1:]
+                        break
+                    starting += 1
+
+        return text

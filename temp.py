@@ -46,13 +46,20 @@
 # print(b)
 
 
-def testYield():
-    a = 0
-    for i in range(1000):
-        print("a")
-        yield i
-        a += i
+# def testYield():
+#     a = 0
+#     for i in range(1000):
+#         print("a")
+#         yield i
+#         a += i
+#
+#
+# test = testYield()
+# print(test)
 
 
-test = testYield()
-print(test)
+import requests
+from bs4 import BeautifulSoup
+
+a = requests.get('https://jisho.org/search/%E9%BB%99%20%23kanji')
+print(a.content)

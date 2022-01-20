@@ -73,3 +73,18 @@ def setCountersToFile(counter: int, totals: int, type: str) -> None:
             var = {'maziiCounter': 0, 'maziiTotal': 0, 'jishoCounter': 0, 'jishoTotal': 0}
             counterfile.write(json.dumps(var, indent=4, ensure_ascii=False))
         setCountersToFile(counter, totals, type)
+
+
+def setTypeToFile(questionType, answerType, len=0):
+    try:
+        with open('./Data/questionType.json', 'r', encoding='UTF-8') as questionFile:
+            var = json.loads(questionFile.read())
+        with open('./Data/questionType.json', 'w', encoding='UTF-8') as questionFile:
+            var['questionType'] = questionType
+            var['answerType'] = answerType
+            var['len'] = len
+            questionFile.write(json.dumps(var))
+    except Exception as ex:
+        print(ex, 'setTypeToFile')
+        with open('./Data/questionType.json', 'w', encoding='UTF-8') as counterfile:
+            counterfile.write(json.dumps({'questionType': 'kanji', 'answerType': 'english', 'len': 0}))

@@ -42,6 +42,12 @@ class japanWords:
             return ''
 
 
+class japanWordRandom(japanWords):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
 if __name__ == '__main__':
-    a = japanWords(kun='asbcnujk')
-    print(a.kun)
+    a = japanWordRandom(kun='asbcnujk')
+    type = 'kun'
+    print(getattr(a, type))

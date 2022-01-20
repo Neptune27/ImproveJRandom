@@ -18,7 +18,7 @@ from classType import japanWords
 import wordController
 import translateProcess
 from jsonController import Settings
-from testUI import Ui_Dialog
+from randomWordWindow import Ui_wordRandom
 import progressBarUI
 from subprocess import Popen
 from multiprocessing import Process, freeze_support
@@ -532,15 +532,15 @@ class Ui_kanjiIndex(object):
         self.folderCheckBox.toggled.connect(self.changeIsFolderSetting)
         self.databaseLocationButton.clicked.connect(self.setDatabaseLocation)
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
-        self.actionApply.triggered.connect(self.initWindow)
+        self.actionApply.triggered.connect(self.randomWordWindow)
 
-    def initWindow(self):
+    def randomWordWindow(self):
         try:
-            self.window = QDialog()
-            self.window.setAttribute(Qt.WA_DeleteOnClose)
-            self.w = Ui_Dialog()
-            self.w.setupUi(self.window)
-            self.window.show()
+            self.wordRandomWindow = QMainWindow()
+            self.wordRandomWindow.setAttribute(Qt.WA_DeleteOnClose)
+            self.wordRandom = Ui_wordRandom()
+            self.wordRandom.setupUi(self.wordRandomWindow)
+            self.wordRandomWindow.show()
         except Exception as ex:
             print(ex)
 
@@ -598,8 +598,8 @@ class Ui_kanjiIndex(object):
         if filteredText != '':
             # print(filteredText)
             # Popen(["python", "progressBarUI.py"])
-            p = Process(target=progressBarUI.runProgressBar)
-            p.start()
+            processBar = Process(target=progressBarUI.runProgressBar)
+            processBar.start()
             # Popen(["progressBarUI.exe"])
             translateProcess.appendTraslated(filteredText)
 
@@ -610,6 +610,7 @@ class Ui_kanjiIndex(object):
     def item_click(self, item):
         try:
             self.translateKanjiToUI(item.text())
+            print(self.wordListWidget.currentIndex().row())
         except AttributeError:
             pass
         # print(item.)
