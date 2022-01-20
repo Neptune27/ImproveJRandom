@@ -1,6 +1,6 @@
 {
-  "databaseLocation": "D:/PycharmProjects/ImproveJRandom/Data/defaultDatabase.db",
-  "inputPath": "D:/PycharmProjects/ImproveJRandom/Input",
+  "databaseLocation": "/defaultDatabase.db",
+  "inputPath": "",
   "filterPath": "./Data/filterFile.txt",
   "isFolder": true
 }

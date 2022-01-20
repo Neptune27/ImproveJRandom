@@ -107,3 +107,60 @@ if __name__ == "__main__":
                     starting += 1
 
         return text
+
+
+
+
+    def customConnect(self, RanWordObject):
+        self.ranwordObject = RanWordObject
+        self.addNumQuestion(self.len)
+        self.acceptButton.clicked.connect(self.acceptClicked)
+        self.quitButton.clicked.connect(self.quitClicked)
+        self.var = jsonController.readType(self.len, len(self.ranwordObject.questionAllList))
+        self.setComboBox(self.var['questionType'], self.questionComboBox)
+        self.setComboBox(self.var['answerType'], self.answerComboBox)
+        self.numQuestionComboBox.setCurrentIndex(int(self.var['len']))
+
+    def setComboBox(self, var: str, button: QComboBox):
+        if var == 'kanji':
+            button.setCurrentIndex(0)
+        elif var == 'mean':
+            button.setCurrentIndex(1)
+        elif var == 'english':
+            button.setCurrentIndex(2)
+        elif var == 'vietnamese':
+            button.setCurrentIndex(3)
+        elif var == 'kun':
+            button.setCurrentIndex(4)
+        elif var == 'on':
+            button.setCurrentIndex(5)
+        else:
+            raise NotImplementedError('setComboBox not implemented this function')
+
+    def acceptClicked(self):
+        if self.numQuestionComboBox.currentText() == 'All':
+            len = 0
+        else:
+            len = int(self.numQuestionComboBox.currentText())
+        questionType = self.setType(self.questionComboBox)
+        answerType = self.setType(self.answerComboBox)
+        jsonController.setTypeToFile(questionType, answerType, len=len)
+        self.ranwordObject.prepareQuestion(self.ranwordObject.questionAllList)
+        self.mainObject.accept()
+
+    def setType(self, button: QComboBox):
+        if button.currentIndex() == 1:
+            return 'mean'
+        elif button.currentIndex() == 3:
+            return 'vietnamese'
+        else:
+            return str(button.currentText()).lower()
+
+    def quitClicked(self):
+        self.mainObject.close()
+
+    def addNumQuestion(self, len):
+        self.numQuestionComboBox.clear()
+        self.numQuestionComboBox.addItem("All")
+        for index in range(len):
+            self.numQuestionComboBox.addItem(f"{index + 1}")

@@ -88,3 +88,16 @@ def setTypeToFile(questionType, answerType, len=0):
         print(ex, 'setTypeToFile')
         with open('./Data/questionType.json', 'w', encoding='UTF-8') as counterfile:
             counterfile.write(json.dumps({'questionType': 'kanji', 'answerType': 'english', 'len': 0}))
+
+
+def readType(len, lenList):
+    try:
+        with open('./Data/questionType.json', 'r', encoding='UTF-8') as questionFile:
+            var = json.loads(questionFile.read())
+        if 0 != var['len'] > len > lenList:
+            setTypeToFile(var['questionType'], var['answerType'], len=0)
+            var = readType(len)
+        return var
+    except Exception as ex:
+        setTypeToFile('kanji', 'english', len=0)
+        readType(len)

@@ -185,23 +185,32 @@
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>721</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionSubmit"/>
-    <addaction name="actionReset"/>
-    <addaction name="actionRegenerate"/>
-   </widget>
-   <addaction name="menuFile"/>
+      <property name="geometry">
+          <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>721</width>
+              <height>22</height>
+          </rect>
+      </property>
+      <widget class="QMenu" name="menuSubmit">
+          <property name="title">
+              <string>Submit</string>
+          </property>
+      </widget>
+      <widget class="QMenu" name="menuReset">
+          <property name="title">
+              <string>Reset</string>
+          </property>
+      </widget>
+      <widget class="QMenu" name="menuSettings">
+          <property name="title">
+              <string>Settings</string>
+          </property>
+      </widget>
+      <addaction name="menuSubmit"/>
+      <addaction name="menuReset"/>
+      <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSubmit">

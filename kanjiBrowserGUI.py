@@ -7,20 +7,17 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-import time
+import traceback
 from functools import partial
-from threading import Thread
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
 import SQLController
-from classType import japanWords
 import wordController
 import translateProcess
 from jsonController import Settings
 from randomWordWindow import Ui_wordRandom
 import progressBarUI
-from subprocess import Popen
 from multiprocessing import Process, freeze_support
 
 settings = Settings()
@@ -541,8 +538,8 @@ class Ui_kanjiIndex(object):
             self.wordRandom = Ui_wordRandom()
             self.wordRandom.setupUi(self.wordRandomWindow)
             self.wordRandomWindow.show()
-        except Exception as ex:
-            print(ex)
+        except:
+            traceback.print_exc()
 
     def fillterWord(self, words, **kwargs):
         self.wordListWidget.clear()

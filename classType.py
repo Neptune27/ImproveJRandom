@@ -48,6 +48,5 @@ class japanWordRandom(japanWords):
 
 
 if __name__ == '__main__':
-    a = japanWordRandom(kun='asbcnujk')
-    type = 'kun'
-    print(getattr(a, type))
+    a = japanWordRandom(kun='na', on='bcsiub', mean='bnsucia')
+    print(a.toArray())

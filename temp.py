@@ -25,27 +25,27 @@
 #        findJishoContent(content, '//*[@id="result_area"]/div/div[1]/div[1]/div/div[2]/div[1]', xpath=True),
 #        findJishoContent(content, '//*[@id="result_area"]/div/div[1]/div[1]/div/div[2]/div[2]/dl', xpath=True),
 #        findJishoContent(content, '//*[@id="result_area"]/div/div[1]/div[1]/div/div[2]/div[3]/dl', xpath=True)])
-
-
+#
+#
 # a = input()
 #
-
+#
 # print(a)
-
+#
 # import random
 # a = list(range(100))
 #
 # print(a)
 # random.shuffle(a)
 # print(a)
-
-
+#
+#
 # a = ['1','2']
 #
 # b = ''.join([str(av) for av in a])
 # print(b)
-
-
+#
+#
 # def testYield():
 #     a = 0
 #     for i in range(1000):
@@ -56,10 +56,18 @@
 #
 # test = testYield()
 # print(test)
+#
+#
+# import requests
+# from bs4 import BeautifulSoup
+#
+# a = requests.get('https://jisho.org/search/%E9%BB%99%20%23kanji')
+# print(a.content)
+#
+#
+
+def printName():
+    print(__name__)
 
 
-import requests
-from bs4 import BeautifulSoup
-
-a = requests.get('https://jisho.org/search/%E9%BB%99%20%23kanji')
-print(a.content)
+printName()

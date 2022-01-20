@@ -26,6 +26,9 @@ def randomWordInWordList(wordList: list, **kwargs) -> list:
 
 
 if __name__ == '__main__':
+    from temp import printName
+
+    printName()
 
     wordlist = SQLController.getAllObjects()
 

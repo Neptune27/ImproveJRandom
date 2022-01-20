@@ -20,7 +20,6 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName(u"Settings")
         Settings.resize(561, 70)
-        self.mainObject = Settings
         sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -28,8 +27,9 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(561, 70))
         Settings.setMaximumSize(QSize(561, 70))
-        self.settingLayout = QHBoxLayout(Settings)
-        self.settingLayout.setObjectName(u"settingLayout")
+
+        self.horizontalLayout = QHBoxLayout(Settings)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.questionTypeWidget = QWidget(Settings)
         self.questionTypeWidget.setObjectName(u"questionTypeWidget")
         self.questionLayout = QVBoxLayout(self.questionTypeWidget)
@@ -37,16 +37,11 @@ class Ui_Settings(object):
         self.questionLayout.setContentsMargins(0, 0, 0, 0)
         self.questionLabel = QLabel(self.questionTypeWidget)
         self.questionLabel.setObjectName(u"questionLabel")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.questionLabel.sizePolicy().hasHeightForWidth())
-        self.questionLabel.setSizePolicy(sizePolicy1)
 
         self.questionLayout.addWidget(self.questionLabel)
 
         self.questionComboBox = QComboBox(self.questionTypeWidget)
-        self.questionComboBox.addItem("asc")
+        self.questionComboBox.addItem("")
         self.questionComboBox.addItem("")
         self.questionComboBox.addItem("")
         self.questionComboBox.addItem("")
@@ -56,10 +51,7 @@ class Ui_Settings(object):
 
         self.questionLayout.addWidget(self.questionComboBox)
 
-        self.questionLayout.setStretch(0, 1)
-        self.questionLayout.setStretch(1, 8)
-
-        self.settingLayout.addWidget(self.questionTypeWidget)
+        self.horizontalLayout.addWidget(self.questionTypeWidget)
 
         self.answerTypeWidget = QWidget(Settings)
         self.answerTypeWidget.setObjectName(u"answerTypeWidget")
@@ -82,7 +74,7 @@ class Ui_Settings(object):
 
         self.answerLayout.addWidget(self.answerComboBox)
 
-        self.settingLayout.addWidget(self.answerTypeWidget)
+        self.horizontalLayout.addWidget(self.answerTypeWidget)
 
         self.numQuestionWidget = QWidget(Settings)
         self.numQuestionWidget.setObjectName(u"numQuestionWidget")
@@ -99,7 +91,7 @@ class Ui_Settings(object):
 
         self.numQuestionLayout.addWidget(self.numQuestionComboBox)
 
-        self.settingLayout.addWidget(self.numQuestionWidget)
+        self.horizontalLayout.addWidget(self.numQuestionWidget)
 
         self.quitAcceptWidget = QWidget(Settings)
         self.quitAcceptWidget.setObjectName(u"quitAcceptWidget")
@@ -109,33 +101,29 @@ class Ui_Settings(object):
         self.acceptQuitLayout.setContentsMargins(0, 0, 0, 0)
         self.quitButton = QPushButton(self.quitAcceptWidget)
         self.quitButton.setObjectName(u"quitButton")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.quitButton.sizePolicy().hasHeightForWidth())
-        self.quitButton.setSizePolicy(sizePolicy2)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.quitButton.sizePolicy().hasHeightForWidth())
+        self.quitButton.setSizePolicy(sizePolicy1)
 
         self.acceptQuitLayout.addWidget(self.quitButton)
 
         self.acceptButton = QPushButton(self.quitAcceptWidget)
         self.acceptButton.setObjectName(u"acceptButton")
-        sizePolicy2.setHeightForWidth(self.acceptButton.sizePolicy().hasHeightForWidth())
-        self.acceptButton.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.acceptButton.sizePolicy().hasHeightForWidth())
+        self.acceptButton.setSizePolicy(sizePolicy1)
 
         self.acceptQuitLayout.addWidget(self.acceptButton)
 
-        self.settingLayout.addWidget(self.quitAcceptWidget)
-
-        self.settingLayout.setStretch(0, 3)
-        self.settingLayout.setStretch(1, 3)
-        self.settingLayout.setStretch(2, 3)
-        self.settingLayout.setStretch(3, 1)
+        self.horizontalLayout.addWidget(self.quitAcceptWidget)
 
         self.retranslateUi(Settings)
 
         QMetaObject.connectSlotsByName(Settings)
+        self.mainObject = Settings
+        self.var = {}
         self.len = 0
-
     # setupUi
 
     def retranslateUi(self, Settings):
@@ -160,10 +148,33 @@ class Ui_Settings(object):
         self.quitButton.setText(QCoreApplication.translate("Settings", u"Quit", None))
         self.acceptButton.setText(QCoreApplication.translate("Settings", u"Accept", None))
 
-    def customConnect(self):
+    # retranslateUi
+
+    def customConnect(self, RanWordObject):
+        self.ranwordObject = RanWordObject
         self.addNumQuestion(self.len)
         self.acceptButton.clicked.connect(self.acceptClicked)
         self.quitButton.clicked.connect(self.quitClicked)
+        self.var = jsonController.readType(self.len, len(self.ranwordObject.questionAllList))
+        self.setComboBox(self.var['questionType'], self.questionComboBox)
+        self.setComboBox(self.var['answerType'], self.answerComboBox)
+        self.numQuestionComboBox.setCurrentIndex(int(self.var['len']))
+
+    def setComboBox(self, var: str, button: QComboBox):
+        if var == 'kanji':
+            button.setCurrentIndex(0)
+        elif var == 'mean':
+            button.setCurrentIndex(1)
+        elif var == 'english':
+            button.setCurrentIndex(2)
+        elif var == 'vietnamese':
+            button.setCurrentIndex(3)
+        elif var == 'kun':
+            button.setCurrentIndex(4)
+        elif var == 'on':
+            button.setCurrentIndex(5)
+        else:
+            raise NotImplementedError('setComboBox not implemented this function')
 
     def acceptClicked(self):
         if self.numQuestionComboBox.currentText() == 'All':
@@ -173,6 +184,7 @@ class Ui_Settings(object):
         questionType = self.setType(self.questionComboBox)
         answerType = self.setType(self.answerComboBox)
         jsonController.setTypeToFile(questionType, answerType, len=len)
+        self.ranwordObject.prepareQuestion(self.ranwordObject.questionAllList)
         self.mainObject.accept()
 
     def setType(self, button: QComboBox):
@@ -191,5 +203,3 @@ class Ui_Settings(object):
         self.numQuestionComboBox.addItem("All")
         for index in range(len):
             self.numQuestionComboBox.addItem(f"{index + 1}")
-
-    # retranslateUi

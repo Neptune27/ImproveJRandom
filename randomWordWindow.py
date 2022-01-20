@@ -215,7 +215,7 @@ class Ui_wordRandom(object):
             self.wordRandomSetting = Ui_Settings()
             self.wordRandomSetting.setupUi(self.wordRandomSettingDialog)
             self.wordRandomSetting.len = len(self.questionAllList)
-            self.wordRandomSetting.customConnect()
+            self.wordRandomSetting.customConnect(self)
             self.wordRandomSettingDialog.show()
         except Exception as ex:
             print(ex)
