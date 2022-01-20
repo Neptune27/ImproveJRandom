@@ -1,0 +1,6 @@
+python-docx
+docx2txt
+deep_translator
+pyside6==6.2.2.1
+pynput
+requests-html
