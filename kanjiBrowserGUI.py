@@ -19,8 +19,9 @@ import wordController
 import translateProcess
 from jsonController import Settings
 from testUI import Ui_Dialog
-from progressBarUI import Ui_ProcessBarDialog
+import progressBarUI
 from subprocess import Popen
+from multiprocessing import Process, freeze_support
 
 settings = Settings()
 
@@ -595,12 +596,16 @@ class Ui_kanjiIndex(object):
         rawText, filteredText = wordController.deleteDuplicate(rawText, wordController.filteredWords(),
                                                                database=True, org=2)
         if filteredText != '':
-            print(filteredText)
-            Popen(["python", "progressBarUI.py"], shell=True)
+            # print(filteredText)
+            # Popen(["python", "progressBarUI.py"])
+            p = Process(target=progressBarUI.runProgressBar)
+            p.start()
+            # Popen(["progressBarUI.exe"])
             translateProcess.appendTraslated(filteredText)
 
         if rawText != '':
             self.fillterWord(rawText, absolute=True, searched=True)
+
 
     def item_click(self, item):
         try:
@@ -648,6 +653,7 @@ class Ui_kanjiIndex(object):
 if __name__ == "__main__":
     import sys
 
+    freeze_support()
     app = QApplication(sys.argv)
     kanjiBrowserWindow = QMainWindow()
     kanjiBrowserUi = Ui_kanjiIndex()

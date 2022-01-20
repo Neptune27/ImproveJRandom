@@ -43,5 +43,5 @@ class japanWords:
 
 
 if __name__ == '__main__':
-    a = japanWords(kun='a')
-    print(a.toArray())
+    a = japanWords(kun='asbcnujk')
+    print(a.kun)

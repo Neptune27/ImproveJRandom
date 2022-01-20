@@ -20,6 +20,7 @@ import SQLController
 import jsonController
 import translateProcess
 import wordController
+import multiprocessing
 
 
 class Ui_ProcessBarDialog(object):
@@ -39,7 +40,7 @@ class Ui_ProcessBarDialog(object):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.maziiProgressBar = QProgressBar(self.maziiProcessWidget)
         self.maziiProgressBar.setObjectName(u"maziiProgressBar")
-        self.maziiProgressBar.setValue(24)
+        self.maziiProgressBar.setValue(0)
         self.maziiProgressBar.setTextVisible(False)
 
         self.horizontalLayout.addWidget(self.maziiProgressBar)
@@ -62,14 +63,14 @@ class Ui_ProcessBarDialog(object):
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.jishoProgressBar = QProgressBar(self.jishoProgressWidget)
         self.jishoProgressBar.setObjectName(u"jishoProgressBar")
-        self.jishoProgressBar.setValue(24)
+        self.jishoProgressBar.setValue(0)
         self.jishoProgressBar.setTextVisible(False)
 
         self.horizontalLayout_2.addWidget(self.jishoProgressBar)
 
         self.jishoLabel = QLabel(self.jishoProgressWidget)
         self.jishoLabel.setObjectName(u"jishoLabel")
-        self.setProgressFile()
+        # self.setProgressFile()
         self.horizontalLayout_2.addWidget(self.jishoLabel)
 
         self.horizontalLayout_2.setStretch(0, 8)
@@ -80,16 +81,13 @@ class Ui_ProcessBarDialog(object):
         self.retranslateUi(ProcessBarDialog)
         self.timer = QTimer()
         self.timer.timeout.connect(partial(self.closeWhenFinished, ProcessBarDialog))
-        self.timer.setInterval(500)
+        self.timer.setInterval(100)
         self.timer.start()
         QMetaObject.connectSlotsByName(ProcessBarDialog)
         # self.closeWhenFinished(ProcessBarDialog)
 
     # setupUi
 
-    def setProgressFile(self):
-        jsonController.setCountersToFile(0, 100, 'jisho')
-        jsonController.setCountersToFile(0, 100, 'mazii')
 
     def retranslateUi(self, ProcessBarDialog):
         ProcessBarDialog.setWindowTitle(QCoreApplication.translate("ProcessBarDialog", u"Dialog", None))
@@ -115,7 +113,7 @@ class Ui_ProcessBarDialog(object):
     # retranslateUi
 
 
-if __name__ == '__main__':
+def runProgressBar():
     import sys
 
     app = QApplication(sys.argv)
@@ -125,3 +123,8 @@ if __name__ == '__main__':
     processBarUI.setupUi(processBar)
     processBarUI.retranslateUi(processBar)
     sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    multiprocessing.freeze_support()
+    runProgressBar()

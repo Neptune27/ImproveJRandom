@@ -100,6 +100,8 @@ def jointSegments(kanji, mazii: list, jisho: list):
 
 
 def appendTraslated(words, chunks=45):
+    jsonController.setCountersToFile(0, len(words), 'mazii')
+    jsonController.setCountersToFile(0, len(words), 'jisho')
     if words == '':
         pass
     else:

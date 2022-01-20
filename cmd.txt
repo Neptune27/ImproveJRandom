@@ -2,6 +2,7 @@ pyinstaller translateProcess.py --copy-metadata pyppeteer
 
 pyinstaller kanjiBrowserGUI.py --copy-metadata pyppeteer
 
+pyi-makespec --copy-metadata pyppeteer kanjiBrowserGUI.py progressBarUI.py
 
 pyside6-uic kanjiBrowser.ui > kanjiBrowserGUI.py
 
