@@ -1,0 +1,12 @@
+__pycache__/
+.idea/
+.ipynb_checkpoints/
+build/
+Data/Auto Save/
+dist/
+Input/
+Need To Learn/
+test/
+*.docx
+*.txt
+*.ipynb
