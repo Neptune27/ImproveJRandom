@@ -53,3 +53,23 @@ class Settings:
             self.assignVariable()
         except TypeError as te:
             print(te)
+
+
+def setCountersToFile(counter: int, totals: int, type: str) -> None:
+    try:
+        with open('./Data/counter.json', 'r', encoding='UTF-8') as counterfile:
+            var = json.loads(counterfile.read())
+        with open('./Data/counter.json', 'w', encoding='UTF-8') as counterfile:
+            if type == 'mazii':
+                var["maziiCounter"] = counter
+                var["maziiTotal"] = totals
+            elif type == 'jisho':
+                var['jishoCounter'] = counter
+                var['jishoTotal'] = totals
+            counterfile.write(json.dumps(var, indent=4, ensure_ascii=False))
+        print(var)
+    except json.decoder.JSONDecodeError:
+        with open('./Data/counter.json', 'w', encoding='UTF-8') as counterfile:
+            var = {'maziiCounter': 0, 'maziiTotal': 0, 'jishoCounter': 0, 'jishoTotal': 0}
+            counterfile.write(json.dumps(var, indent=4, ensure_ascii=False))
+        setCountersToFile(counter, totals, type)

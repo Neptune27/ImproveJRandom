@@ -7,8 +7,9 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+import time
 from functools import partial
-
+from threading import Thread
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
@@ -17,6 +18,9 @@ from classType import japanWords
 import wordController
 import translateProcess
 from jsonController import Settings
+from testUI import Ui_Dialog
+from progressBarUI import Ui_ProcessBarDialog
+from subprocess import Popen
 
 settings = Settings()
 
@@ -527,6 +531,17 @@ class Ui_kanjiIndex(object):
         self.folderCheckBox.toggled.connect(self.changeIsFolderSetting)
         self.databaseLocationButton.clicked.connect(self.setDatabaseLocation)
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
+        self.actionApply.triggered.connect(self.initWindow)
+
+    def initWindow(self):
+        try:
+            self.window = QDialog()
+            self.window.setAttribute(Qt.WA_DeleteOnClose)
+            self.w = Ui_Dialog()
+            self.w.setupUi(self.window)
+            self.window.show()
+        except Exception as ex:
+            print(ex)
 
     def fillterWord(self, words, **kwargs):
         self.wordListWidget.clear()
@@ -579,8 +594,11 @@ class Ui_kanjiIndex(object):
         rawText = rawText + self.searchBoxEdit.toPlainText()
         rawText, filteredText = wordController.deleteDuplicate(rawText, wordController.filteredWords(),
                                                                database=True, org=2)
-        translateProcess.appendTraslated(filteredText)
-        # print(f'{rawText=}, {filteredText=}')
+        if filteredText != '':
+            print(filteredText)
+            Popen(["python", "progressBarUI.py"], shell=True)
+            translateProcess.appendTraslated(filteredText)
+
         if rawText != '':
             self.fillterWord(rawText, absolute=True, searched=True)
 

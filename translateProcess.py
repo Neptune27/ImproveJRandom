@@ -1,6 +1,9 @@
+import time
+
 from requests_html import AsyncHTMLSession
 import asyncio
-import time
+
+import jsonController
 import wordController
 import json
 from classType import japanWords
@@ -75,8 +78,9 @@ def asyncSegmentsSession(words, chunks, type):
     for word in wordList:
         tmp = wordController.splitString(word, 1)
         counter += len(tmp)
-        temp.append(asyncio.get_event_loop().run_until_complete(asyncWords(tmp, type)))
+        temp.append(asyncio.run(asyncWords(tmp, type)))
         print(f'searched {counter} out of {totalWords} in {type}')
+        jsonController.setCountersToFile(counter, totalWords, type)
     for result in temp:
         for innerResult in result:
             results.append(innerResult)
@@ -110,7 +114,6 @@ def listToString(items):
 
 
 if __name__ == '__main__':
-    start = time.perf_counter()
     rawWords = wordController.readFile('.\\Input\\', folder=True)
     rawWords = wordController.deleteDuplicate(rawWords, wordController.filteredWords(), database=False)
     print(rawWords)
@@ -119,4 +122,3 @@ if __name__ == '__main__':
     # 0
     # 933766711 0914800347
     # print(rawWords)
-    print(time.perf_counter() - start)

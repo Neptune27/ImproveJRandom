@@ -1,3 +1,5 @@
+import json
+
 import SQLController as sqlcon
 import jsonController
 import os
@@ -15,7 +17,7 @@ def filteredWords():
             へほひゃひゅひをんがぎぐげょまみむめもみゃみゅみょやゆよらりるれろりゃりゅりょわゐゑごぎゃぎゅぎょざじずぜぞじゃじゅじょだぢづで
             どぢゃぢゅぢょばびぶべぼびゃびゅびょぱぴぷぺぽぴゃぴゅぴょアイウエオャュョカキクケコキャキュキョサシスセソシャシュショタチツテト
             チャチュチョナニヌネノニャニュニョハヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲンガギグゲゴギ
-            ャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパピプペポピャピュピョっ ? ？　 1234567890  = _ # 
+            ャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパピプペポピャピュピョっ ? ？　! 1234567890  = _ # 
             ,:.();\ " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ …  「」ィェー々/[-]{}+<>
             ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂ ưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ'""")
         return filteredWords()
@@ -117,6 +119,10 @@ def splitString(file, length=10):
             stringChunk.append(file[i:lenFile])
             i += length
     return stringChunk
+
+# if __name__ == '__main__':
+#     setCountersInFile(1,2)
+
 
 # def createJPObject(type, word):
 #     word = sqlcon.getWord(f'{type}', f'{word}')

@@ -45,4 +45,14 @@
 # b = ''.join([str(av) for av in a])
 # print(b)
 
-print('\u30a2\u30a4')
+
+def testYield():
+    a = 0
+    for i in range(1000):
+        print("a")
+        yield i
+        a += i
+
+
+test = testYield()
+print(test)
