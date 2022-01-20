@@ -121,6 +121,10 @@ def findObjectInDatabase(words, **kwargs):
         results.extend(databaseToObjects(getSimilarWords('kanji', f'{words}')))
         results.extend(databaseToObjects(getSimilarWords('means', f'{words.upper()}')))
         results.extend(databaseToObjects(getSimilarWords('level', f'{words}')))
+        results.extend(databaseToObjects(getSimilarWords('onReading', f'{words}')))
+        results.extend(databaseToObjects(getSimilarWords('kunReadings', f'{words}')))
+        results.extend(databaseToObjects(getSimilarWords('radicals', f'{words}')))
+        results.extend(databaseToObjects(getSimilarWords('parts', f'{words}')))
     return removeObjectDuplicate(results)
 
 

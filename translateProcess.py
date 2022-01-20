@@ -99,7 +99,7 @@ def jointSegments(kanji, mazii: list, jisho: list):
                       strokes=jisho[2], radicals=jisho[3], parts=jisho[4], level=mazii[4], taught=jisho[1])
 
 
-def appendTraslated(words, chunks=45):
+def appendTraslated(words, chunks=45, updatee=False):
     jsonController.setCountersToFile(0, len(words), 'mazii')
     jsonController.setCountersToFile(0, len(words), 'jisho')
     if words == '':
@@ -108,7 +108,10 @@ def appendTraslated(words, chunks=45):
         maziiArr = asyncSegmentsSession(words, chunks, 'mazii')
         jishoArr = asyncSegmentsSession(words, chunks, 'jisho')
         objs = jointMultipleSegments(words, maziiArr, jishoArr)
-        SQLController.appendMultiple(objs)
+        if updatee:
+            SQLController.updateDatabase(objs[0])
+        else:
+            SQLController.appendMultiple(objs)
 
 
 def listToString(items):

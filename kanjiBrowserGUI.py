@@ -43,6 +43,10 @@ class Ui_kanjiIndex(object):
         self.actionIn_Database.setObjectName(u"actionIn_Database")
         self.actionApply = QAction(kanjiIndex)
         self.actionApply.setObjectName(u"actionApply")
+
+        self.actionReset = QAction(kanjiIndex)
+        self.actionReset.setObjectName(u"actionReset")
+
         self.centralwidget = QWidget(kanjiIndex)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralLayout = QGridLayout(self.centralwidget)
@@ -474,6 +478,7 @@ class Ui_kanjiIndex(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.menuRandom.menuAction())
         self.menuFile.addAction(self.actionApply)
+        self.menuFile.addAction(self.actionReset)
         self.menuRandom.addAction(self.actionIn_Selected_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s)
         self.menuRandom.addAction(self.actionIn_Database)
@@ -488,7 +493,10 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_File.setText(QCoreApplication.translate("kanjiIndex", u"In Selected File", None))
         self.actionIn_Selected_Item_s.setText(QCoreApplication.translate("kanjiIndex", u"In Selected Item(s)", None))
         self.actionIn_Database.setText(QCoreApplication.translate("kanjiIndex", u"In Database", None))
+
         self.actionApply.setText(QCoreApplication.translate("kanjiIndex", u"Apply", None))
+        self.actionReset.setText(QCoreApplication.translate("kanjiIndex", u"Reset", None))
+
         self.phienEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                           u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
@@ -522,22 +530,30 @@ class Ui_kanjiIndex(object):
 
     # retranslateUi
     def customConnect(self):
+        self.fillterWord('')
+
         self.wordListWidget.currentItemChanged.connect(self.item_click)
         self.fillterLineEdit.textChanged.connect(partial(self.fillterWord, absolute=False))
+
         self.nextButton.clicked.connect(self.nextPos)
         self.pushButton.clicked.connect(self.searchKanji)
         self.prevButton.clicked.connect(self.prevPos)
-        self.fillterWord('')
+
         self.searchBoxEdit.textChanged.connect(self.searchBoxEditWrapper)
         self.wordLocationPushButton.clicked.connect(self.getDirectoryOrFile)
+
         self.folderCheckBox.setChecked(settings.isFolder)
         self.folderCheckBox.toggled.connect(self.changeIsFolderSetting)
+
         self.databaseLocationButton.clicked.connect(self.setDatabaseLocation)
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
+
         self.actionIn_Database.triggered.connect(self.randomWordWindow)
         self.actionApply.triggered.connect(self.applyTextChangedToDatabase)
+        self.actionReset.triggered.connect(self.resetWord)
 
     def applyTextChangedToDatabase(self):
+        index = self.wordListWidget.currentIndex().row()
         japanWordObject = japanWords()
         japanWordObject.kanji = self.kanjiEdit.text()
         japanWordObject.vietnamese = self.vietnameseBrowser.toPlainText()
@@ -554,16 +570,18 @@ class Ui_kanjiIndex(object):
         if japanWordObject.kanji != '':
             SQLController.updateDatabase(japanWordObject)
             self.searchBoxEditWrapper()
+        self.wordListWidget.setCurrentRow(index)
 
     def randomWordWindow(self):
         try:
-            del (self.wordRandom)
+            del self.wordRandom
         except AttributeError:
             print('ok')
 
         try:
             self.wordRandomWindow = QMainWindow()
             self.wordRandomWindow.setAttribute(Qt.WA_DeleteOnClose)
+            self.wordRandomWindow.setObjectName("Random Word")
             self.wordRandom = Ui_wordRandom()
             self.wordRandom.setupUi(self.wordRandomWindow)
             self.wordRandomWindow.show()
@@ -612,7 +630,10 @@ class Ui_kanjiIndex(object):
         self.wordListWidget.addItems([word.kanji for word in wordslist])
 
     def searchBoxEditWrapper(self):
-        self.fillterWord(self.searchBoxEdit.toPlainText(), absolute=True)
+        if self.searchBoxEdit.toPlainText() != '':
+            self.fillterWord(self.searchBoxEdit.toPlainText(), absolute=True)
+        else:
+            self.fillterWord(self.fillterLineEdit.text(), absolute=False)
 
     def searchKanji(self):
         settings.inputPath = self.wordLocationBoxEdit.text()
@@ -622,16 +643,23 @@ class Ui_kanjiIndex(object):
         rawText, filteredText = wordController.deleteDuplicate(rawText, wordController.filteredWords(),
                                                                database=True, org=2)
         if filteredText != '':
-            # print(filteredText)
-            # Popen(["python", "progressBarUI.py"])
-            processBar = Process(target=progressBarUI.runProgressBar)
-            processBar.start()
-            # Popen(["progressBarUI.exe"])
+            self.initializeLoadingBar()
             translateProcess.appendTraslated(filteredText)
 
         if rawText != '':
             self.fillterWord(rawText, absolute=True, searched=True)
 
+    def resetWord(self):
+        if self.kanjiEdit.text() != '':
+            index = self.wordListWidget.currentIndex().row()
+            self.initializeLoadingBar()
+            translateProcess.appendTraslated(self.kanjiEdit.text(), 1, True)
+            self.searchBoxEditWrapper()
+            self.wordListWidget.setCurrentRow(index)
+
+    def initializeLoadingBar(self):
+        processBar = Process(target=progressBarUI.runProgressBar)
+        processBar.start()
 
     def item_click(self, item):
         try:
@@ -667,7 +695,7 @@ class Ui_kanjiIndex(object):
 
     def setDatabaseLocation(self):
         settings.databaseLocation = QFileDialog.getExistingDirectory()
-        settings.databaseLocation += 'defaultDatabase.db'
+        settings.databaseLocation += 'Data/defaultDatabase.db'
         settings.commitToFile()
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
         # settings.commitToFile()

@@ -25,8 +25,6 @@ from randomWordDialog import Ui_Settings
 
 class Ui_wordRandom(object):
     def setupUi(self, wordRandom):
-        if not wordRandom.objectName():
-            wordRandom.setObjectName(u"wordRandom")
         wordRandom.resize(721, 600)
         self.actionSubmit = QAction(wordRandom)
         self.actionSubmit.setObjectName(u"actionSubmit")
