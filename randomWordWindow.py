@@ -151,8 +151,9 @@ class Ui_wordRandom(object):
         self.retranslateUi(wordRandom)
 
         QMetaObject.connectSlotsByName(wordRandom)
+        self.wordRandomObject = wordRandom
         self.customConnect()
-        self.a = SQLController.getAllObjects()
+
 
     # setupUi
 
@@ -170,6 +171,7 @@ class Ui_wordRandom(object):
     # retranslateUi
     def keyboardOnPressed(self, key):
         try:
+            print(key.vk)
             if key.vk == 97:
                 self.buttonClicked('A')
             elif key.vk == 98:
@@ -193,6 +195,8 @@ class Ui_wordRandom(object):
         self.answerCButton.clicked.connect(partial(self.buttonClicked, 'C'))
         self.answerDButton.clicked.connect(partial(self.buttonClicked, 'D'))
 
+        self.wordRandomObject.closeEvent = self.closeEvent
+
         self.actionSubmit.triggered.connect(self.setCommit)
         self.actionSettings.triggered.connect(self.randomWordSetting)
 
@@ -204,6 +208,11 @@ class Ui_wordRandom(object):
 
         self.keyboardListener = keyboard.Listener(on_press=self.keyboardOnPressed)
         self.keyboardListener.start()
+
+    def closeEvent(self, event):
+        self.keyboardListener.stop()
+        del (self.wordRandomObject)
+        del (self)
 
     def prepareQuestion(self, questionList: list, **kwargs):
         random.shuffle(questionList)

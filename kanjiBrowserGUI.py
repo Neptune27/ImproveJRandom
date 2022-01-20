@@ -533,8 +533,7 @@ class Ui_kanjiIndex(object):
 
     def randomWordWindow(self):
         try:
-            self.wordRandom.keyboardListener.stop()
-            del self.wordRandom
+            del (self.wordRandom)
         except AttributeError:
             print('ok')
         try:
@@ -643,7 +642,7 @@ class Ui_kanjiIndex(object):
 
     def setDatabaseLocation(self):
         settings.databaseLocation = QFileDialog.getExistingDirectory()
-        settings.databaseLocation += '/defaultDatabase.db'
+        settings.databaseLocation += 'defaultDatabase.db'
         settings.commitToFile()
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
         # settings.commitToFile()

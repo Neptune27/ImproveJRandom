@@ -1,6 +1,6 @@
 {
-  "databaseLocation": "/defaultDatabase.db",
-  "inputPath": "",
-  "filterPath": "./Data/filterFile.txt",
+  "databaseLocation": ".\\Data\\defaultDatabase.db",
+  "inputPath": ".\\Input\\",
+  "filterPath": ".\\Data\\filterFile.txt",
   "isFolder": true
 }
