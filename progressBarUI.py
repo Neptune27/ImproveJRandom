@@ -22,8 +22,8 @@ class Ui_ProcessBarDialog(object):
             ProcessBarDialog.setObjectName(u"ProcessBarDialog")
         ProcessBarDialog.resize(500, 118)
         ProcessBarDialog.show()
-        self.objDialog = ProcessBarDialog
-        self.objDialog.setWindowTitle("Finding Words, please wait")
+        ProcessBarDialog.activateWindow()
+
         self.verticalLayout = QVBoxLayout(ProcessBarDialog)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -112,6 +112,7 @@ def runProgressBar():
 
     app = QApplication(sys.argv)
     processBar = QDialog()
+    processBar.setWindowTitle('Finding Words, please wait')
     processBar.setAttribute(Qt.WA_QuitOnClose)
     processBarUI = Ui_ProcessBarDialog()
     processBarUI.setupUi(processBar)

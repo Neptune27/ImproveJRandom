@@ -14,6 +14,8 @@ class Settings:
             self.inputPath = self.var["inputPath"]
             self.filterPath = self.var["filterPath"]
             self.isFolder = self.var["isFolder"]
+            self.deepLAPI = self.var["deepLAPI"]
+            self.googleCurrentLanguage = self.var['googleCurrentLanguage']
             self.assignVariable()
         except Exception:
             self.setDefaultSettings()
@@ -25,6 +27,8 @@ class Settings:
         self.writeToJson("inputPath", '.\\Input\\', self.jsonPath)
         self.writeToJson("filterPath", '.\\Data\\filterFile.txt', self.jsonPath)
         self.writeToJson("isFolder", True, self.jsonPath)
+        self.writeToJson("deepLAPI", '', self.jsonPath)
+        self.writeToJson('googleCurrentLanguage', 'english', self.jsonPath)
         self.assignVariable()
 
     def writeToJson(self, var, text, path):
@@ -41,6 +45,8 @@ class Settings:
             self.inputPath = self.var["inputPath"]
             self.filterPath = self.var["filterPath"]
             self.isFolder = self.var["isFolder"]
+            self.deepLAPI = self.var["deepLAPI"]
+            self.googleCurrentLanguage = self.var['googleCurrentLanguage']
         except Exception as ex:
             self.setDefaultSettings()
 
@@ -50,6 +56,8 @@ class Settings:
             self.writeToJson("inputPath", self.inputPath, self.jsonPath)
             self.writeToJson("filterPath", self.filterPath, self.jsonPath)
             self.writeToJson("isFolder", self.isFolder, self.jsonPath)
+            self.writeToJson("deepLAPI", self.deepLAPI, self.jsonPath)
+            self.writeToJson("googleCurrentLanguage", self.googleCurrentLanguage, self.jsonPath)
             self.assignVariable()
         except TypeError as te:
             print(te)

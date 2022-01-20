@@ -75,12 +75,10 @@
 # cho N* in từ 1 đến N, sum
 # a = range(5)
 
-class Test:
-    def __init__(self, name):
-        self.name = name
+def factional(x: int):
+    if x == 1:
+        return x
+    return x * factional(x - 1)
 
 
-arr = [Test('二'), Test('人'), Test('一')]
-b = sorted(arr, key=lambda x: x.name)
-for i in b:
-    print(i.name)
+print(factional(12))

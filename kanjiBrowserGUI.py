@@ -1,12 +1,4 @@
-# -*- coding: utf-8 -*-
 
-################################################################################
-## Form generated from reading UI file 'kanjiBrowser.ui'
-##
-## Created by: Qt User Interface Compiler version 6.1.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
 import traceback
 from functools import partial
 from PySide6.QtCore import *  # type: ignore
@@ -19,9 +11,10 @@ from jsonController import Settings
 import randomWordWindow
 import progressBarUI
 import InSelectedItemsGUI
+import translateWindowGUI
+
 from multiprocessing import Process, freeze_support
 from classType import japanWords
-
 
 # from importlib import reload
 
@@ -43,20 +36,18 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_File.setObjectName(u"actionIn_Selected_File")
         self.actionIn_Selected_Item_s = QAction(kanjiIndex)
         self.actionIn_Selected_Item_s.setObjectName(u"actionIn_Selected_Item_s")
+        self.actionApply = QAction(kanjiIndex)
+        self.actionApply.setObjectName(u"actionApply")
+        self.actionResety = QAction(kanjiIndex)
+        self.actionResety.setObjectName(u"actionResety")
+        self.actionReset = QAction(kanjiIndex)
+        self.actionReset.setObjectName(u"actionReset")
+        self.actionDelete = QAction(kanjiIndex)
+        self.actionDelete.setObjectName(u"actionDelete")
         self.actionIn_Selected_Item_s_In_File = QAction(kanjiIndex)
         self.actionIn_Selected_Item_s_In_File.setObjectName(u"actionIn_Selected_Item_s_In_File")
         self.actionIn_Database = QAction(kanjiIndex)
         self.actionIn_Database.setObjectName(u"actionIn_Database")
-
-        self.actionApply = QAction(kanjiIndex)
-        self.actionApply.setObjectName(u"actionApply")
-
-        self.actionReset = QAction(kanjiIndex)
-        self.actionReset.setObjectName(u"actionReset")
-
-        self.actionDelete = QAction(kanjiIndex)
-        self.actionDelete.setObjectName(u"actionReset")
-
         self.centralwidget = QWidget(kanjiIndex)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralLayout = QGridLayout(self.centralwidget)
@@ -88,6 +79,7 @@ class Ui_kanjiIndex(object):
         self.wordListWidget.setSortingEnabled(True)
 
         self.listwidgetLayout.addWidget(self.wordListWidget)
+
 
         self.mainLayout.addWidget(self.listmainwidget, 0, 0, 1, 1)
 
@@ -215,6 +207,7 @@ class Ui_kanjiIndex(object):
 
         self.strokegradeLayout.addWidget(self.gradeEdit)
 
+
         self.strokegradeurlswdgetLayout.addWidget(self.strokegrade)
 
         self.urlswidget = QWidget(self.strokegradeurlswdget)
@@ -248,10 +241,11 @@ class Ui_kanjiIndex(object):
         self.maziiUrlEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.maziiUrlEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.maziiUrlEdit.setReadOnly(True)
-        self.maziiUrlEdit.setTextInteractionFlags(Qt.LinksAccessibleByMouse | Qt.TextSelectableByMouse)
+        # self.maziiUrlEdit.setTextInteractionFlags(Qt.NoTextInteraction)
         self.maziiUrlEdit.setOpenExternalLinks(True)
 
         self.urlswidgetLayout.addWidget(self.maziiUrlEdit)
+
 
         self.strokegradeurlswdgetLayout.addWidget(self.urlswidget)
 
@@ -284,6 +278,7 @@ class Ui_kanjiIndex(object):
 
         self.radicalpartwidgetLayout.addWidget(self.partPlainEdit)
 
+
         self.radicalpartonkunwidgetLayout.addWidget(self.radicalpartwidget)
 
         self.kunonwidget = QWidget(self.radicalpartonkunwidget)
@@ -303,15 +298,18 @@ class Ui_kanjiIndex(object):
         self.onPlainEdit.setObjectName(u"onPlainEdit")
         font4 = QFont()
         font4.setPointSize(20)
-        font4.setStyleStrategy(QFont.PreferAntialias)
+        font4.setStyleStrategy(QFont.PreferDefault)
         self.onPlainEdit.setFont(font4)
         self.onPlainEdit.setMouseTracking(False)
 
         self.kunonwidgetLayout.addWidget(self.onPlainEdit)
 
+
         self.radicalpartonkunwidgetLayout.addWidget(self.kunonwidget)
 
+
         self.infowidgetLayout.addWidget(self.radicalpartonkunwidget)
+
 
         self.mainLayout.addWidget(self.infowidget, 0, 1, 1, 1)
 
@@ -427,19 +425,38 @@ class Ui_kanjiIndex(object):
         self.searchBoxWidgetLayout = QHBoxLayout(self.searchBoxWidget)
         self.searchBoxWidgetLayout.setObjectName(u"searchBoxWidgetLayout")
         self.searchBoxWidgetLayout.setContentsMargins(0, 0, 0, 0)
-        self.searchBoxEdit = QPlainTextEdit(self.searchBoxWidget)
+        self.widget = QWidget(self.searchBoxWidget)
+        self.widget.setObjectName(u"widget")
+        self.horizontalLayout = QHBoxLayout(self.widget)
+        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.searchBoxEdit = QPlainTextEdit(self.widget)
         self.searchBoxEdit.setObjectName(u"searchBoxEdit")
         self.searchBoxEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-        self.searchBoxWidgetLayout.addWidget(self.searchBoxEdit)
+        self.horizontalLayout.addWidget(self.searchBoxEdit)
+
+        self.pushButton_2 = QPushButton(self.widget)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
+        self.pushButton_2.setSizePolicy(sizePolicy4)
+        self.pushButton_2.setMaximumSize(QSize(25, 16777215))
+
+        self.horizontalLayout.addWidget(self.pushButton_2)
+
+        self.searchBoxWidgetLayout.addWidget(self.widget)
 
         self.navigationButtonWidget = QWidget(self.searchBoxWidget)
         self.navigationButtonWidget.setObjectName(u"navigationButtonWidget")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.navigationButtonWidget.sizePolicy().hasHeightForWidth())
-        self.navigationButtonWidget.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.navigationButtonWidget.sizePolicy().hasHeightForWidth())
+        self.navigationButtonWidget.setSizePolicy(sizePolicy5)
         self.navigationButtonWidget.setMaximumSize(QSize(120, 16777215))
         self.navigationButtonWidget.setBaseSize(QSize(120, 0))
         self.navigationButtonWidgetLayout = QHBoxLayout(self.navigationButtonWidget)
@@ -490,7 +507,6 @@ class Ui_kanjiIndex(object):
         self.menuFile.addAction(self.actionApply)
         self.menuFile.addAction(self.actionReset)
         self.menuFile.addAction(self.actionDelete)
-
         self.menuRandom.addAction(self.actionIn_Selected_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s_In_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s)
@@ -499,53 +515,65 @@ class Ui_kanjiIndex(object):
         self.retranslateUi(kanjiIndex)
 
         QMetaObject.connectSlotsByName(kanjiIndex)
-
     # setupUi
 
     def retranslateUi(self, kanjiIndex):
         self.actionIn_Selected_File.setText(QCoreApplication.translate("kanjiIndex", u"In Selected File", None))
         self.actionIn_Selected_Item_s.setText(
-            QCoreApplication.translate("kanjiIndex", u"Selecte Item(s) in Database", None))
-        self.actionIn_Database.setText(QCoreApplication.translate("kanjiIndex", u"In Database", None))
-        self.actionIn_Selected_Item_s_In_File.setText(
-            QCoreApplication.translate("kanjiIndex", u"Selecte Item(s) in Files", None))
-
+            QCoreApplication.translate("kanjiIndex", u"Select Item(s) in Database", None))
         self.actionApply.setText(QCoreApplication.translate("kanjiIndex", u"Apply", None))
+        self.actionResety.setText(QCoreApplication.translate("kanjiIndex", u"Reset", None))
         self.actionReset.setText(QCoreApplication.translate("kanjiIndex", u"Reset", None))
         self.actionDelete.setText(QCoreApplication.translate("kanjiIndex", u"Delete", None))
-
+        self.actionIn_Selected_Item_s_In_File.setText(
+            QCoreApplication.translate("kanjiIndex", u"Select Item(s) in File", None))
+        self.actionIn_Database.setText(QCoreApplication.translate("kanjiIndex", u"In Database", None))
+        self.englishPlainEdit.setPlainText("")
         self.phienEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                           u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
                                                           "p, li { white-space: pre-wrap; }\n"
                                                           "</style></head><body style=\" font-family:'Segoe UI'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-                                                          "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\"></span></p></body></html>",
+                                                          "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                    </p>\n"
+                                                          "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u00c1I                                                                </p></body></html>",
                                                           None))
+        self.levelLineEdit.setText("")
+        self.kanjiEdit.setText("")
+        self.vietnameseBrowser.setPlainText("")
+        self.strokeEdit.setPlainText("")
+        self.gradeEdit.setPlainText("")
         self.jishoUrlEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                              u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                              "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
                                                              "p, li { white-space: pre-wrap; }\n"
                                                              "</style></head><body style=\" font-family:'Segoe UI'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\"></span></p></body></html>",
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                                </p>\n"
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">https://jisho.org/search/%E6%84%9B%20%23kanji                                                                            </p></body></html>",
                                                              None))
         self.maziiUrlEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                              u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                              "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
                                                              "p, li { white-space: pre-wrap; }\n"
                                                              "</style></head><body style=\" font-family:'Segoe UI'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></span></a></p></body></html>",
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                                </p>\n"
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://mazii.net/search/kanji?dict=javi&amp;query=%E6%84%9B&amp;hl=en-US\"><span style=\" text-decoration: underline; color:#0000ff;\">https://mazii.net/search/kanji?dict=javi&amp;query=%E6%84%9B&amp;hl=en-US</span></a>                                                                            </p></body></html>",
                                                              None))
+        self.radicalPlainEdit.setPlainText("")
+        self.partPlainEdit.setPlainText("")
+        self.kunPlainEdit.setPlainText("")
+        self.onPlainEdit.setPlainText("")
         self.databaseLocationButton.setText(QCoreApplication.translate("kanjiIndex", u"Database Location", None))
         self.wordLocationPushButton.setText(QCoreApplication.translate("kanjiIndex", u"Word Location", None))
         self.folderCheckBox.setText(QCoreApplication.translate("kanjiIndex", u"Folder", None))
         self.pushButton.setText(QCoreApplication.translate("kanjiIndex", u"Search", None))
+        self.pushButton_2.setText(QCoreApplication.translate("kanjiIndex", u"...", None))
         self.prevButton.setText(QCoreApplication.translate("kanjiIndex", u"Prev", None))
         self.nextButton.setText(QCoreApplication.translate("kanjiIndex", u"Next", None))
         self.menuFile.setTitle(QCoreApplication.translate("kanjiIndex", u"File", None))
         self.menuRandom.setTitle(QCoreApplication.translate("kanjiIndex", u"Random", None))
         pass
-
     # retranslateUi
+
     def customConnect(self):
         self.fillterWord('')
 
@@ -558,6 +586,7 @@ class Ui_kanjiIndex(object):
 
         self.searchBoxEdit.textChanged.connect(self.searchBoxEditWrapper)
         self.wordLocationPushButton.clicked.connect(self.getDirectoryOrFile)
+        self.pushButton_2.clicked.connect(self.translateWindow)
 
         self.folderCheckBox.setChecked(settings.isFolder)
         self.folderCheckBox.toggled.connect(self.changeIsFolderSetting)
@@ -615,6 +644,20 @@ class Ui_kanjiIndex(object):
         except:
             traceback.print_exc()
 
+    def translateWindow(self):
+        # reload(translateWindowGUI)
+        try:
+            del self.translateMainWindow
+        except AttributeError:
+            print('[INFO] TranslateWindow First Initialized')
+        self.translateWindow = QMainWindow()
+        self.translateWindow.setAttribute(Qt.WA_DeleteOnClose)
+        self.translateMainWindow = translateWindowGUI.Ui_TranslateWindow()
+        self.translateMainWindow.setupUi(self.translateWindow)
+        self.translateMainWindow.inputTextEdit.insertPlainText(self.searchBoxEdit.toPlainText())
+        self.translateMainWindow.customConnect(self)
+        self.translateWindow.show()
+
     def randomWordWindow(self, questionList):
         if len(questionList) == 0 or len(questionList) == 1:
             return
@@ -643,6 +686,10 @@ class Ui_kanjiIndex(object):
         for index in range(len(words)):
             words[index] = wordController.chineseToKanji(words[index])
         print(f"[INFO] '{words}' is currently in Search")
+        # if kwargs.get('notSearch'):
+        #     words = words[0]  # Because text in searchKanji is an array of len 1
+        #     orgWords = wordController.deleteDuplicate(words, wordController.filteredWords())
+        #     words = wordController.splitString(orgWords, 1)
         # words = wordController.chineseToKanji(words)
         if words == '':
             wordList = SQLController.getAllObjects()
@@ -701,10 +748,18 @@ class Ui_kanjiIndex(object):
         rawText = rawText + addtional
         return wordController.deleteDuplicate(rawText, wordController.filteredWords(), database=True, org=2)
 
-    def appendTraslated(self, filteredText):
-        if filteredText != '':
-            self.initializeLoadingBar()
-            translateProcess.appendTraslated(filteredText)
+    def appendTraslated(self, text):
+        if text != '':
+            _, text = wordController.deleteDuplicate(text, wordController.filteredWords(), database=True, org=2)
+            if len(text) >= 3:
+                self.initializeLoadingBar()
+            translateProcess.appendTraslated(text)
+
+    def toIndexText(self, text) -> None:
+        for i in range(self.wordListWidget.count()):
+            # print(self.wordListWidget.item(i))
+            if self.wordListWidget.item(i).text() == text:
+                self.wordListWidget.setCurrentRow(i)
 
     def initializeLoadingBar(self):
         processBar = Process(target=progressBarUI.runProgressBar)
@@ -786,3 +841,4 @@ if __name__ == "__main__":
     kanjiBrowserUi.customConnect()
     kanjiBrowserWindow.show()
     sys.exit(app.exec())
+
