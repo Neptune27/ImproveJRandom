@@ -61,9 +61,8 @@ class SaveDialog(QFileDialog):
                 self.texts = ''.join(i for i in self.texts)
             else:
                 if self.typed == 2:
-                    self.textsDict = (
-                    {i: self.texts[i] for i in self.texts if self.texts[i] == 3 or self.texts[i] == self.typed})
-                    self.texts += ''.join(i for i in self.texts if self.texts[i] == 3)
+                    self.textsDict = ({i: self.texts[i] for i in self.texts if self.texts[i] == 3 or self.texts[i] == self.typed})
+                    self.texts = ''.join(i for i in self.textsDict if self.textsDict[i] == 3 or self.textsDict[i] == self.typed)
                 else:
                     self.textsDict = {i: self.texts[i] for i in self.texts if self.texts[i] == self.typed}
                     self.texts = ''.join(i for i in self.texts if self.texts[i] == self.typed)

@@ -1,21 +1,4 @@
-import time
+i = 2
 
+print(f"Giá trị của i là {i}")
 
-def wrapper(f):
-    start = time.perf_counter_ns()
-    f()
-    print(time.perf_counter_ns() - start)
-
-
-@wrapper
-def add():
-    a = []
-    for i in range(1000):
-        a.append(i)
-
-
-@wrapper
-def minus():
-    a = []
-    for i in range(1000):
-        a.append(i)

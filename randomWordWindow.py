@@ -28,7 +28,7 @@ class Ui_wordRandom(object):
     def setupUi(self, wordRandom: QMainWindow):
         if not wordRandom.objectName():
             wordRandom.setObjectName(u"wordRandom")
-        wordRandom.resize(721, 600)
+        # wordRandom.resize(720, 600)
         self.actionSubmit = QAction(wordRandom)
         self.actionSubmit.setObjectName(u"actionSubmit")
         self.actionReset = QAction(wordRandom)
@@ -279,6 +279,9 @@ class Ui_wordRandom(object):
         # self.currentWrongWords = ''
         # self.currentRightWords = ''
         self.autoSaveInit()
+
+        self.wordRandomObject.resizeEvent = partial(self.mainObjResizeEvent,)
+        self.wordRandomObject.resize(720, 600)
 
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
         self.questionListWidget.currentItemChanged.connect(self.itemPosChanged)
@@ -586,3 +589,7 @@ class Ui_wordRandom(object):
         changes = typed.isChecked()
         setattr(self.mainSettings, attribute, changes)
         self.mainSettings.commitToFile()
+
+    def mainObjResizeEvent(self, func):
+        self.itemPosChanged()
+        # print(func)

@@ -728,19 +728,12 @@ class Ui_kanjiIndex(object):
         for index in range(len(words)):
             words[index] = wordController.chineseToKanji(words[index])
         # print(f"[INFO] '{words}' is currently in Search")
-        # if kwargs.get('notSearch'):
-        #     words = words[0]  # Because text in searchKanji is an array of len 1
-        #     orgWords = wordController.deleteDuplicate(words, wordController.filteredWords())
-        #     words = wordController.splitString(orgWords, 1)
-        # words = wordController.chineseToKanji(words)
         if words == '':
             wordList = SQLController.getAllObjects()
         if kwargs.get('searched'):
             words = words[0]  # Because text in searchKanji is an array of len 1
             orgWords = wordController.deleteDuplicate(words, wordController.filteredWords())
             words = wordController.splitString(orgWords, 1)
-            # print(orgWords, filteredWords)
-            # translateProcess.appendTraslated(filteredWords)
         if len(wordList) == 0:
             for word in words:
                 wordList.extend(SQLController.findObjectInDatabase(f'{word}', absoluteSearch=kwargs.get('absolute')))
@@ -776,11 +769,8 @@ class Ui_kanjiIndex(object):
             self.fillterWord(self.fillterLineEdit.text(), absolute=False)
 
     def searchKanji(self):
-        # settings.inputPath = self.wordLocationBoxEdit.text()
-        # settings.commitToFile()
         try:
             rawText, filteredText = self.deleteDuplicateWithAdd(str(self.rawText), self.searchBoxEdit.toPlainText())
-            # print(rawText, filteredText)
         except Exception as ex:
             print(ex)
 
@@ -791,8 +781,6 @@ class Ui_kanjiIndex(object):
             self.fillterWord(rawText, absolute=True, searched=True)
 
     def deleteDuplicateWithAdd(self, rawText, addtional=''):
-        # rawText = ''.join(wordController.readFile(fileLocation, folder=isFolder))
-        # rawText += addtional
         return wordController.deleteDuplicate(rawText + addtional, wordController.filteredWords(), database=True, org=2)
 
     def appendTraslated(self, text):
@@ -810,7 +798,6 @@ class Ui_kanjiIndex(object):
         if kwargs.get('list') is not None:
             self.fillterWord(kwargs.get('list'), searched=True, absolute=True)
         for i in range(self.wordListWidget.count()):
-            # print(self.wordListWidget.item(i))
             if self.wordListWidget.item(i).text() == text:
                 self.wordListWidget.setCurrentRow(i)
                 return
@@ -835,7 +822,6 @@ class Ui_kanjiIndex(object):
             print(f'[INFO] Row currently selected is: {self.wordListWidget.currentIndex().row()}')
         except AttributeError:
             pass
-        # print(item.)
 
     def nextPos(self):
         self.prevRow = self.wordListWidget.currentIndex().row() + 1
@@ -855,17 +841,9 @@ class Ui_kanjiIndex(object):
         self.rawText.resetText()
         if settings.isFolder:
             self.rawText.getFolderTexts()
-            # print(self.rawText)
-            # settings.inputPath = QFileDialog.getExistingDirectory()
-            # self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
         else:
             self.rawText.getFileTexts()
         self.wordLocationBoxEdit.setText(self.rawText.getFileLocations())
-        # print(self.rawText)
-        # filePaths = QFileDialog.getOpenFileNames()
-        # settings.inputPath = ", ".join(filePaths[0])
-        # self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
-        # settings.commitToFile()
 
     def randomGetFile(self):
         inputPath = fileBrowserDialog.FileReader()

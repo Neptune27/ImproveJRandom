@@ -1,14 +1,14 @@
 {
-  "databaseLocation": "D:/PycharmProjects/ImproveJRandom/Data/defaultDatabase.db",
-  "inputPath": "D:/PycharmProjects/ImproveJRandom/Input/testFile2.txt, D:/PycharmProjects/ImproveJRandom/Input/逆光.txt",
-  "filterPath": ".\\Data\\filterFile.txt",
-  "isFolder": true,
-  "deepLAPI": "",
-  "googleCurrentLanguage": "Vietnamese",
-  "correctWords": ".\\Data\\Auto Save\\Correct Words\\",
-  "words": ".\\Data\\Auto Save\\Words\\",
-  "wrongWords": ".\\Data\\Auto Save\\Wrong Words\\",
-  "autoSaveWords": false,
-  "autoSaveWrongWords": false,
-  "autoSaveRightWords": false
+    "inputPath": ".\\Input\\",
+    "filterPath": ".\\Data\\filterFile.txt",
+    "isFolder": true,
+    "deepLAPI": "",
+    "googleCurrentLanguage": "Vietnamese",
+    "correctWords": ".\\Data\\Auto Save\\Correct Words\\",
+    "words": ".\\Data\\Auto Save\\Words\\",
+    "wrongWords": ".\\Data\\Auto Save\\Wrong Words\\",
+    "autoSaveWords": true,
+    "autoSaveWrongWords": true,
+    "autoSaveRightWords": true,
+    "databaseLocation": ".\\Data\\defaultDatabase.db"
 }
