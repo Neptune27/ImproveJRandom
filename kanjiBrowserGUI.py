@@ -19,6 +19,7 @@ from jsonController import Settings
 from randomWordWindow import Ui_wordRandom
 import progressBarUI
 from multiprocessing import Process, freeze_support
+from classType import japanWords
 
 settings = Settings()
 
@@ -38,6 +39,8 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_File.setObjectName(u"actionIn_Selected_File")
         self.actionIn_Selected_Item_s = QAction(kanjiIndex)
         self.actionIn_Selected_Item_s.setObjectName(u"actionIn_Selected_Item_s")
+        self.actionIn_Database = QAction(kanjiIndex)
+        self.actionIn_Database.setObjectName(u"actionIn_Database")
         self.actionApply = QAction(kanjiIndex)
         self.actionApply.setObjectName(u"actionApply")
         self.centralwidget = QWidget(kanjiIndex)
@@ -473,6 +476,7 @@ class Ui_kanjiIndex(object):
         self.menuFile.addAction(self.actionApply)
         self.menuRandom.addAction(self.actionIn_Selected_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s)
+        self.menuRandom.addAction(self.actionIn_Database)
 
         self.retranslateUi(kanjiIndex)
 
@@ -483,6 +487,7 @@ class Ui_kanjiIndex(object):
     def retranslateUi(self, kanjiIndex):
         self.actionIn_Selected_File.setText(QCoreApplication.translate("kanjiIndex", u"In Selected File", None))
         self.actionIn_Selected_Item_s.setText(QCoreApplication.translate("kanjiIndex", u"In Selected Item(s)", None))
+        self.actionIn_Database.setText(QCoreApplication.translate("kanjiIndex", u"In Database", None))
         self.actionApply.setText(QCoreApplication.translate("kanjiIndex", u"Apply", None))
         self.phienEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                           u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -529,13 +534,33 @@ class Ui_kanjiIndex(object):
         self.folderCheckBox.toggled.connect(self.changeIsFolderSetting)
         self.databaseLocationButton.clicked.connect(self.setDatabaseLocation)
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
-        self.actionApply.triggered.connect(self.randomWordWindow)
+        self.actionIn_Database.triggered.connect(self.randomWordWindow)
+        self.actionApply.triggered.connect(self.applyTextChangedToDatabase)
+
+    def applyTextChangedToDatabase(self):
+        japanWordObject = japanWords()
+        japanWordObject.kanji = self.kanjiEdit.text()
+        japanWordObject.vietnamese = self.vietnameseBrowser.toPlainText()
+        japanWordObject.english = self.englishPlainEdit.toPlainText()
+        japanWordObject.mean = self.phienEdit.toPlainText()
+        japanWordObject.level = self.levelLineEdit.text()
+        japanWordObject.strokes = self.strokeEdit.toPlainText()
+        japanWordObject.taught = self.gradeEdit.toPlainText()
+        japanWordObject.radicals = self.radicalPlainEdit.toPlainText()
+        japanWordObject.kun = self.kunPlainEdit.toPlainText()
+        japanWordObject.parts = self.partPlainEdit.toPlainText()
+        japanWordObject.on = self.onPlainEdit.toPlainText()
+
+        if japanWordObject.kanji != '':
+            SQLController.updateDatabase(japanWordObject)
+            self.searchBoxEditWrapper()
 
     def randomWordWindow(self):
         try:
             del (self.wordRandom)
         except AttributeError:
             print('ok')
+
         try:
             self.wordRandomWindow = QMainWindow()
             self.wordRandomWindow.setAttribute(Qt.WA_DeleteOnClose)

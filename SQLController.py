@@ -21,15 +21,22 @@ def connectDatabase():
 settings, conn, cur = connectDatabase()
 
 
-def appendMultiple(arr):
+def appendMultiple(arr, update=False):
     temporary = deleteDuplicate(arr)
     temporary = multipleObjToArray(temporary)
-    # print(temporary)
     conn.executemany('REPLACE INTO jpWords(kanji, means, englishMeanings, vietnameseMeanings, onReading, kunReadings,\
                     strokes, radicals, parts, level, taught) VALUES(?,?,?,?,?,?,?,?,?,?,?)', temporary)
     conn.commit()
     # a = cur.execute("""SELECT EXISTS(SELECT 1 FROM jpWords WHERE japanWords=? LIMIT 1)""",(temporary[0][0], )).fetchone()[0]
     # print(a)
+
+
+def updateDatabase(obj: japanWords):
+    conn.execute(f"""UPDATE jpWords SET means = '{obj.mean}' , englishMeanings = '{obj.english}' ,
+                            vietnameseMeanings = '{obj.vietnamese}' , onReading = '{obj.on}' , kunReadings = '{obj.kun}' , 
+                            strokes = '{obj.strokes}' , radicals = '{obj.radicals}' , parts = '{obj.parts}' , level = '{obj.level}',
+                            taught = '{obj.taught}' WHERE kanji = '{obj.kanji}'""")
+    conn.commit()
 
 
 def deleteDuplicate(arr):

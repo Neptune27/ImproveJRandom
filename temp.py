@@ -71,39 +71,36 @@
 # while True:
 #     print('a')
 
-from pynput import keyboard
 
 
-def on_pressed(key):
-    try:
-        if key.char == 'a':
-            listener.stop()
-        else:
-            print(key.vk)
-    except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
+
+class MainWindow(QtGui.):
+    def __init__(self, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
+        self.setupUi()
+
+    def setupUi(self):
+        self.setObjectName("MainWindow")
+        self.resize(277, 244)
+        self.statusbar = QtGui.QStatusBar()
+        self.statusbar.setObjectName("statusbar")
+        self.setStatusBar(self.statusbar)
+
+    def closeEvent(self, event):
+        result = QtGui.QMessageBox.question(self,
+                                            "Confirm Exit...",
+                                            "Are you sure you want to exit ?",
+                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        event.ignore()
+
+        if result == QtGui.QMessageBox.Yes:
+            event.accept()
 
 
-def on_release(key):
-    print('{0} released'.format(
-        key))
-    if key == keyboard.Key.esc:
-        # Stop listener
-        return False
+if __name__ == "__main__":
+    import sys
 
-
-# Collect events until released
-# with keyboard.Listener(
-#         on_press=on_press,
-#         on_release=on_release) as listener:
-#     listener.join()
-
-# ...or, in a non-blocking fashion:
-
-listener = keyboard.Listener(
-    on_press=on_pressed)
-listener.start()
-
-while True:
-    pass
+    app = QtGui.QApplication(sys.argv)
+    mainWindow = MainWindow()
+    mainWindow.show()
+    sys.exit(app.exec_())

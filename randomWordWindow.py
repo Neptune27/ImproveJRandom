@@ -169,19 +169,19 @@ class Ui_wordRandom(object):
         self.menuFile.setTitle(QCoreApplication.translate("wordRandom", u"File", None))
 
     # retranslateUi
-    def keyboardOnPressed(self, key):
+    def keyboardOnRelease(self, key):
         try:
-            print(key.vk)
-            if key.vk == 97:
+            if key.vk == 97 or key.vk == 49:
                 self.buttonClicked('A')
-            elif key.vk == 98:
+            elif key.vk == 98 or key.vk == 50:
                 self.buttonClicked('B')
-            elif key.vk == 99:
+            elif key.vk == 99 or key.vk == 51:
                 self.buttonClicked('C')
-            elif key.vk == 100:
+            elif key.vk == 100 or key.vk == 52:
                 self.buttonClicked('D')
         except AttributeError:
             pass
+
 
     def customConnect(self):
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
@@ -206,13 +206,13 @@ class Ui_wordRandom(object):
         self.colorWhite = QColor('#ffffff')
         self.colorBlue = QColor('#0053FA')
 
-        self.keyboardListener = keyboard.Listener(on_press=self.keyboardOnPressed)
+        self.keyboardListener = keyboard.Listener(on_release=self.keyboardOnRelease)
         self.keyboardListener.start()
 
     def closeEvent(self, event):
         self.keyboardListener.stop()
-        del (self.wordRandomObject)
-        del (self)
+        del self.wordRandomObject
+        del self
 
     def prepareQuestion(self, questionList: list, **kwargs):
         random.shuffle(questionList)
@@ -329,7 +329,7 @@ class Ui_wordRandom(object):
                     self.questionListWidget.item(index).setForeground(self.colorRed)
             except AttributeError:
                 self.questionListWidget.item(index).setForeground(self.colorBlue)
-            self.itemPosChanged()
+        self.itemPosChanged()
 
     def resizeTextToFit(self, text, button: QPushButton):
         if text is None:
