@@ -533,12 +533,17 @@ class Ui_kanjiIndex(object):
 
     def randomWordWindow(self):
         try:
+            self.wordRandom.keyboardListener.stop()
+            del self.wordRandom
+        except AttributeError:
+            print('ok')
+        try:
             self.wordRandomWindow = QMainWindow()
             self.wordRandomWindow.setAttribute(Qt.WA_DeleteOnClose)
             self.wordRandom = Ui_wordRandom()
             self.wordRandom.setupUi(self.wordRandomWindow)
             self.wordRandomWindow.show()
-        except:
+        except Exception:
             traceback.print_exc()
 
     def fillterWord(self, words, **kwargs):

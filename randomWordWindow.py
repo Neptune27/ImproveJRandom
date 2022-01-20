@@ -10,6 +10,7 @@
 import json
 import math
 import random
+from pynput import keyboard
 from functools import partial
 
 from PySide6.QtCore import *  # type: ignore
@@ -167,6 +168,18 @@ class Ui_wordRandom(object):
         self.menuFile.setTitle(QCoreApplication.translate("wordRandom", u"File", None))
 
     # retranslateUi
+    def keyboardOnPressed(self, key):
+        try:
+            if key.vk == 97:
+                self.buttonClicked('A')
+            elif key.vk == 98:
+                self.buttonClicked('B')
+            elif key.vk == 99:
+                self.buttonClicked('C')
+            elif key.vk == 100:
+                self.buttonClicked('D')
+        except AttributeError:
+            pass
 
     def customConnect(self):
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
@@ -175,7 +188,6 @@ class Ui_wordRandom(object):
         self.questionList = SQLController.getAllObjects()
         self.actionReset.triggered.connect(partial(self.prepareQuestion, self.questionList))
         self.prepareQuestion(self.questionList)
-
         self.answerAButton.clicked.connect(partial(self.buttonClicked, 'A'))
         self.answerBButton.clicked.connect(partial(self.buttonClicked, 'B'))
         self.answerCButton.clicked.connect(partial(self.buttonClicked, 'C'))
@@ -188,6 +200,10 @@ class Ui_wordRandom(object):
         self.colorGreen = QColor('#00ad0c')
         self.colorRed = QColor('#F5011F')
         self.colorWhite = QColor('#ffffff')
+        self.colorBlue = QColor('#0053FA')
+
+        self.keyboardListener = keyboard.Listener(on_press=self.keyboardOnPressed)
+        self.keyboardListener.start()
 
     def prepareQuestion(self, questionList: list, **kwargs):
         random.shuffle(questionList)
@@ -303,8 +319,8 @@ class Ui_wordRandom(object):
                 else:
                     self.questionListWidget.item(index).setForeground(self.colorRed)
             except AttributeError:
-                self.questionListWidget.item(index).setForeground(self.colorRed)
-        self.questionListWidget.setCurrentRow(0)
+                self.questionListWidget.item(index).setForeground(self.colorBlue)
+            self.itemPosChanged()
 
     def resizeTextToFit(self, text, button: QPushButton):
         if text is None:
@@ -341,7 +357,6 @@ class Ui_wordRandom(object):
             elif whichButton == 'D':
                 self.answer[index][0] = self.questionList[index][3]
                 self.answer[index][1] = 'D'
-        if self.commit is False:
             self.questionListWidget.item(index).setForeground(self.colorYellow)
         if index + 2 > self.questionListWidget.count():
             index = 0

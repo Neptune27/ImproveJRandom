@@ -65,9 +65,45 @@
 # print(a.content)
 #
 #
+# for i in range(10):
+#     print(i)
 
-def printName():
-    print(__name__)
+# while True:
+#     print('a')
+
+from pynput import keyboard
 
 
-printName()
+def on_pressed(key):
+    try:
+        if key.char == 'a':
+            listener.stop()
+        else:
+            print(key.vk)
+    except AttributeError:
+        print('special key {0} pressed'.format(
+            key))
+
+
+def on_release(key):
+    print('{0} released'.format(
+        key))
+    if key == keyboard.Key.esc:
+        # Stop listener
+        return False
+
+
+# Collect events until released
+# with keyboard.Listener(
+#         on_press=on_press,
+#         on_release=on_release) as listener:
+#     listener.join()
+
+# ...or, in a non-blocking fashion:
+
+listener = keyboard.Listener(
+    on_press=on_pressed)
+listener.start()
+
+while True:
+    pass
