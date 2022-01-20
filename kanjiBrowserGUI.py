@@ -5,6 +5,7 @@ from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
 import SQLController
+import saveDialog
 import wordController
 import translateProcess
 from jsonController import Settings
@@ -596,7 +597,8 @@ class Ui_kanjiIndex(object):
 
         self.actionApply.triggered.connect(self.applyTextChangedToDatabase)
         self.actionReset.triggered.connect(self.resetWord)
-        self.actionDelete.triggered.connect(self.deleteIndex)
+        # self.actionDelete.triggered.connect(self.deleteIndex)
+        self.actionDelete.triggered.connect(self.testing)
 
         self.actionIn_Selected_File.triggered.connect(self.randomGetFile)
         self.actionIn_Selected_Item_s_In_File.triggered.connect(self.randomGetFileWithSelection)
@@ -831,6 +833,9 @@ class Ui_kanjiIndex(object):
     def changeIsFolderSetting(self, state):
         settings.isFolder = state
         settings.commitToFile()
+
+    def testing(self):
+        a = saveDialog.SaveDialog()
 
 
 if __name__ == "__main__":

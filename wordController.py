@@ -15,14 +15,7 @@ def filteredWords():
         return filteredWords()
 
 
-FILTERED_TEXT = """
-            あいえうおやゆよかきくけこきゃきゅきょさしすせそしゃしゅしょたちつてとちゃちゅちょなにぬねのにゃにゅにょはひふへほひゃひゅひをんがぎぐ
-            げょまみむめもみゃみゅみょやゆよらりるれろりゃりゅりょわゐゑごぎゃぎゅぎょざじずぜぞじゃじゅじょだぢづでどぢゃぢゅぢょばびぶべぼびゃび
-            ゅびょぱぴぷぺぽぴゃぴゅぴょアイウエオャュョカキクケコキャキュキョサシスセソシャシュショタチツテトチャチュチョナニヌネノニャニュニョハ
-            ヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲンガギグゲゴギャギュギョザジズゼゾジャジュジョダヂヅデド
-            ヂャヂュヂョバビブベボビャビュビョパピプペポピャピュピョっ ? ？ぇ　―!	。：～『』＜＝＞■◇↓ぁぅヴォ←ぃ 1234567890  ,:.();\ " abcdefghijklmnopqrstuvwxyzABC
-            DEFGHIJKLMNOPQRSTUVWXYZ …  「」ィェー々/[-]{}+<>！（ァッ）、= _ # ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦ
-            ẨẪẬẮẰẲẴẶẸẺẼỀỀỂ ưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹōū'・"""
+FILTERED_TEXT = """。『』「」々、　"""
 
 CHINESE_REPLACE = {'⼀': '一', '⼆': '二', '⼈': '人', '⼄': '乙', '丨': '丨', '⼃': '丿', '⼅': '亅', '⼇': '亠', '⼉': '儿',
                    '⼊': '入',
@@ -54,7 +47,7 @@ CHINESE_REPLACE = {'⼀': '一', '⼆': '二', '⼈': '人', '⼄': '乙', '丨'
                    '⿑': '齊', '⿒': '歯', '⿓': '龍', '⿔': '龜', '⿕': '龠'}
 
 
-def deleteDuplicate(file: str, filter: str, **kwargs):
+def deleteDuplicate(file: str, filtered: str, **kwargs):
     """
     kwargs:
 
@@ -65,13 +58,22 @@ def deleteDuplicate(file: str, filter: str, **kwargs):
     database (bool): use database to delete duplicates
     """
 
-    org: str
+    org = ''
+    stringArr = []
     if kwargs.get('org') == 1:
         org = str(file)
-    if len(filter) != 0:
-        for i in filter:
-            file = file.replace(i, '')
 
+    if len(filtered) != 0:
+        for text in file:
+            if ("\u2E80" <= text <= "\u2EFF") or ("\u2F00" <= text <= "\u2FDF") or ("\u3000" <= text <= "\u303f") \
+                    or ("\u31C0" <= text <= "\u31ef") or ("\u3400" <= text <= "\u4dbf") or (
+                    "\u4e00" <= text <= "\u9fff") \
+                    or ("\uf900" <= text <= "\ufaff"):
+                stringArr.append(text)
+        file = ''.join(stringArr)
+        for i in filtered:
+            file = file.replace(i, '')
+    print(f'{file=}')
     file = chineseToKanji(file)
 
     i = 0
