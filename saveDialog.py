@@ -19,10 +19,11 @@ class SaveDialog(QFileDialog):
 
 
 class AutoSave:
-    def __init__(self, text, location):
-        self.text = text
+    def __init__(self, location):
+        self.text = ''
         self.location = location
 
     def save(self):
-        with open(f"{self.location}{str(NOW_DATE.now())[:-7]}.txt", 'w', encoding='UTF-8') as loc:
+        writeLoc = f"{self.location}{str(NOW_DATE.now())[:-7]}.txt".replace("-", "").replace(":", "")
+        with open(writeLoc, 'w', encoding='UTF-8') as loc:
             loc.write(self.text)

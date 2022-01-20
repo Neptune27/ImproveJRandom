@@ -19,6 +19,9 @@ class Settings:
             self.correctWords = self.var['correctWords']
             self.words = self.var['words']
             self.wrongWords = self.var['wrongWords']
+            self.autoSaveWords = self.var['autoSaveWords']
+            self.autoSaveWrongWords = self.var['autoSaveWrongWords']
+            self.autoSaveRightWords = self.var['autoSaveRightWords']
             self.assignVariable()
         except Exception:
             self.setDefaultSettings()
@@ -35,6 +38,9 @@ class Settings:
         self.writeToJson('correctWords', '.\\Data\\Auto Save\\Correct Words\\', self.jsonPath)
         self.writeToJson('words', '.\\Data\\Auto Save\\Words\\', self.jsonPath)
         self.writeToJson('wrongWords', '.\\Data\\Auto Save\\Wrong Words\\', self.jsonPath)
+        self.writeToJson('autoSaveWords', True, self.jsonPath)
+        self.writeToJson('autoSaveWrongWords', True, self.jsonPath)
+        self.writeToJson('autoSaveRightWords', True, self.jsonPath)
         self.assignVariable()
 
     def writeToJson(self, var, text, path):
@@ -53,9 +59,12 @@ class Settings:
             self.isFolder = self.var["isFolder"]
             self.deepLAPI = self.var["deepLAPI"]
             self.googleCurrentLanguage = self.var['googleCurrentLanguage']
-            self.correctWord = self.var['correctWords']
+            self.correctWords = self.var['correctWords']
             self.words = self.var['words']
             self.wrongWords = self.var['wrongWords']
+            self.autoSaveWords = self.var['autoSaveWords']
+            self.autoSaveWrongWords = self.var['autoSaveWrongWords']
+            self.autoSaveRightWords = self.var['autoSaveRightWords']
         except Exception as ex:
             self.setDefaultSettings()
 
@@ -67,6 +76,12 @@ class Settings:
             self.writeToJson("isFolder", self.isFolder, self.jsonPath)
             self.writeToJson("deepLAPI", self.deepLAPI, self.jsonPath)
             self.writeToJson("googleCurrentLanguage", self.googleCurrentLanguage, self.jsonPath)
+            self.writeToJson('correctWords', self.correctWords, self.jsonPath)
+            self.writeToJson('words', self.words, self.jsonPath)
+            self.writeToJson('wrongWords', self.wrongWords, self.jsonPath)
+            self.writeToJson('autoSaveWords', self.autoSaveWords, self.jsonPath)
+            self.writeToJson('autoSaveWrongWords', self.autoSaveWrongWords, self.jsonPath)
+            self.writeToJson('autoSaveRightWords', self.autoSaveRightWords, self.jsonPath)
             self.assignVariable()
         except TypeError as te:
             print(te)

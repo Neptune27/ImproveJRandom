@@ -1,0 +1,14 @@
+{
+  "databaseLocation": ".\\Data\\defaultDatabase.db",
+  "inputPath": ".\\Input\\",
+  "filterPath": ".\\Data\\filterFile.txt",
+  "isFolder": true,
+  "deepLAPI": "",
+  "googleCurrentLanguage": "english",
+  "correctWords": ".\\Data\\Auto Save\\Correct Words\\",
+  "words": ".\\Data\\Auto Save\\Words\\",
+  "wrongWords": ".\\Data\\Auto Save\\Wrong Words\\",
+  "autoSaveWords": true,
+  "autoSaveWrongWords": true,
+  "autoSaveRightWords": true
+}

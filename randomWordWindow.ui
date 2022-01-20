@@ -206,19 +206,42 @@
              <property name="title">
                  <string>Save</string>
              </property>
-             <addaction name="actionCurrent_Words"/>
-             <addaction name="actionWrong_Words"/>
-             <addaction name="actionWords_in_Current_Session"/>
-             <addaction name="actionWrong_Words_in_Current_Session"/>
+             <widget class="QMenu" name="menuAuto_Save">
+                 <property name="title">
+                     <string>Auto Save</string>
+                 </property>
+                 <addaction name="actionAuto_Save_Words"/>
+                 <addaction name="actionAuto_Save_Wrong_Words"/>
+                 <addaction name="actionAuto_Save_Right_Words"/>
+             </widget>
+             <widget class="QMenu" name="menuCurrent">
+                 <property name="title">
+                     <string>Current</string>
+                 </property>
+                 <addaction name="actionWrong_Words"/>
+                 <addaction name="actionRight_Words"/>
+                 <addaction name="actionCurrent_Words"/>
+             </widget>
+             <widget class="QMenu" name="menuSession">
+                 <property name="title">
+                     <string>Session</string>
+                 </property>
+                 <addaction name="actionWrong_Words_in_Current_Session"/>
+                 <addaction name="actionWords_in_Current_Session"/>
+                 <addaction name="actionRight_Words_in_Current_Session"/>
+             </widget>
+             <addaction name="menuCurrent"/>
+             <addaction name="menuSession"/>
+             <addaction name="menuAuto_Save"/>
          </widget>
          <addaction name="menuFile"/>
          <addaction name="menuSave"/>
      </widget>
-  <action name="actionSubmit">
-   <property name="text">
-    <string>Submit</string>
-   </property>
-  </action>
+     <action name="actionSubmit">
+         <property name="text">
+             <string>Submit</string>
+         </property>
+     </action>
      <action name="actionReset">
          <property name="text">
              <string>Reset</string>
@@ -267,6 +290,49 @@
      <action name="actionWords_in_Current_Session">
          <property name="text">
              <string>Words in Current Session</string>
+         </property>
+     </action>
+     <action name="actionAuto_Save_Words">
+         <property name="checkable">
+             <bool>true</bool>
+         </property>
+         <property name="checked">
+             <bool>true</bool>
+         </property>
+         <property name="text">
+             <string>Auto Save Words</string>
+         </property>
+     </action>
+     <action name="actionAuto_Save_Wrong_Words">
+         <property name="checkable">
+             <bool>true</bool>
+         </property>
+         <property name="checked">
+             <bool>true</bool>
+         </property>
+         <property name="text">
+             <string>Auto Save Wrong Words</string>
+         </property>
+     </action>
+     <action name="actionAuto_Save_Right_Words">
+         <property name="checkable">
+             <bool>true</bool>
+         </property>
+         <property name="checked">
+             <bool>true</bool>
+         </property>
+         <property name="text">
+             <string>Auto Save Right Words</string>
+         </property>
+     </action>
+     <action name="actionRight_Words">
+         <property name="text">
+             <string>Right Words</string>
+         </property>
+     </action>
+     <action name="actionRight_Words_in_Current_Session">
+         <property name="text">
+             <string>Right Words in Current Session</string>
          </property>
      </action>
  </widget>
