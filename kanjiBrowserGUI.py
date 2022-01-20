@@ -591,6 +591,8 @@ class Ui_kanjiIndex(object):
         self.wordListWidget.setCurrentRow(index)
 
     def randomWordWindow(self, questionList):
+        if len(questionList) == 0:
+            return
         # reload(randomWordWindow)
         try:
             del self.wordRandom
@@ -613,7 +615,10 @@ class Ui_kanjiIndex(object):
         wordList = []
         if words != '':
             words = words.split()
+        for index in range(len(words)):
+            words[index] = wordController.chineseToKanji(words[index])
         print(words)
+        # words = wordController.chineseToKanji(words)
         if words == '':
             wordList = SQLController.getAllObjects()
         if kwargs.get('searched'):
