@@ -16,10 +16,12 @@ import SQLController
 import wordController
 import translateProcess
 from jsonController import Settings
-from randomWordWindow import Ui_wordRandom
+import randomWordWindow
 import progressBarUI
 from multiprocessing import Process, freeze_support
 from classType import japanWords
+
+# from importlib import reload
 
 settings = Settings()
 
@@ -41,11 +43,15 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_Item_s.setObjectName(u"actionIn_Selected_Item_s")
         self.actionIn_Database = QAction(kanjiIndex)
         self.actionIn_Database.setObjectName(u"actionIn_Database")
+
         self.actionApply = QAction(kanjiIndex)
         self.actionApply.setObjectName(u"actionApply")
 
         self.actionReset = QAction(kanjiIndex)
         self.actionReset.setObjectName(u"actionReset")
+
+        self.actionDelete = QAction(kanjiIndex)
+        self.actionDelete.setObjectName(u"actionReset")
 
         self.centralwidget = QWidget(kanjiIndex)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -479,6 +485,8 @@ class Ui_kanjiIndex(object):
         self.menuFile.addAction(self.menuRandom.menuAction())
         self.menuFile.addAction(self.actionApply)
         self.menuFile.addAction(self.actionReset)
+        self.menuFile.addAction(self.actionDelete)
+
         self.menuRandom.addAction(self.actionIn_Selected_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s)
         self.menuRandom.addAction(self.actionIn_Database)
@@ -496,6 +504,7 @@ class Ui_kanjiIndex(object):
 
         self.actionApply.setText(QCoreApplication.translate("kanjiIndex", u"Apply", None))
         self.actionReset.setText(QCoreApplication.translate("kanjiIndex", u"Reset", None))
+        self.actionDelete.setText(QCoreApplication.translate("kanjiIndex", u"Delete", None))
 
         self.phienEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                           u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -548,9 +557,12 @@ class Ui_kanjiIndex(object):
         self.databaseLocationButton.clicked.connect(self.setDatabaseLocation)
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
 
-        self.actionIn_Database.triggered.connect(self.randomWordWindow)
         self.actionApply.triggered.connect(self.applyTextChangedToDatabase)
         self.actionReset.triggered.connect(self.resetWord)
+        self.actionDelete.triggered.connect(self.deleteIndex)
+
+        self.actionIn_Selected_File.triggered.connect(self.randomGetFile)
+        self.actionIn_Database.triggered.connect(partial(self.randomWordWindow, SQLController.getAllObjects()))
 
     def applyTextChangedToDatabase(self):
         index = self.wordListWidget.currentIndex().row()
@@ -572,7 +584,14 @@ class Ui_kanjiIndex(object):
             self.searchBoxEditWrapper()
         self.wordListWidget.setCurrentRow(index)
 
-    def randomWordWindow(self):
+    def deleteIndex(self):
+        index = self.wordListWidget.currentIndex().row()
+        SQLController.deleteIndex(self.kanjiEdit.text())
+        self.searchBoxEditWrapper()
+        self.wordListWidget.setCurrentRow(index)
+
+    def randomWordWindow(self, questionList):
+        # reload(randomWordWindow)
         try:
             del self.wordRandom
         except AttributeError:
@@ -582,8 +601,9 @@ class Ui_kanjiIndex(object):
             self.wordRandomWindow = QMainWindow()
             self.wordRandomWindow.setAttribute(Qt.WA_DeleteOnClose)
             self.wordRandomWindow.setObjectName("Random Word")
-            self.wordRandom = Ui_wordRandom()
+            self.wordRandom = randomWordWindow.Ui_wordRandom()
             self.wordRandom.setupUi(self.wordRandomWindow)
+            self.wordRandom.customConnect(questionList)
             self.wordRandomWindow.show()
         except Exception:
             traceback.print_exc()
@@ -638,16 +658,27 @@ class Ui_kanjiIndex(object):
     def searchKanji(self):
         settings.inputPath = self.wordLocationBoxEdit.text()
         settings.commitToFile()
-        rawText = ''.join(wordController.readFile(settings.inputPath, folder=settings.isFolder))
-        rawText = rawText + self.searchBoxEdit.toPlainText()
-        rawText, filteredText = wordController.deleteDuplicate(rawText, wordController.filteredWords(),
-                                                               database=True, org=2)
+        rawText, filteredText = self.fileToWord(settings.inputPath, settings.isFolder, self.searchBoxEdit.toPlainText())
+
+        if filteredText != '':
+            self.appendTraslated(filteredText)
+
+        if rawText != '':
+            self.fillterWord(rawText, absolute=True, searched=True)
+
+    def fileToWord(self, fileLocation, isFolder, addtional=''):
+        rawText = ''.join(wordController.readFile(fileLocation, folder=isFolder))
+        rawText = rawText + addtional
+        return wordController.deleteDuplicate(rawText, wordController.filteredWords(), database=True, org=2)
+
+    def appendTraslated(self, filteredText):
         if filteredText != '':
             self.initializeLoadingBar()
             translateProcess.appendTraslated(filteredText)
 
-        if rawText != '':
-            self.fillterWord(rawText, absolute=True, searched=True)
+    def initializeLoadingBar(self):
+        processBar = Process(target=progressBarUI.runProgressBar)
+        processBar.start()
 
     def resetWord(self):
         if self.kanjiEdit.text() != '':
@@ -656,10 +687,6 @@ class Ui_kanjiIndex(object):
             translateProcess.appendTraslated(self.kanjiEdit.text(), 1, True)
             self.searchBoxEditWrapper()
             self.wordListWidget.setCurrentRow(index)
-
-    def initializeLoadingBar(self):
-        processBar = Process(target=progressBarUI.runProgressBar)
-        processBar.start()
 
     def item_click(self, item):
         try:
@@ -693,12 +720,18 @@ class Ui_kanjiIndex(object):
             self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
         settings.commitToFile()
 
+    def randomGetFile(self):
+        inputPath = QFileDialog.getOpenFileNames()
+        rawText, filteredText = self.fileToWord(", ".join(inputPath[0]), False)
+        print(rawText, filteredText)
+        self.appendTraslated(filteredText)
+        self.randomWordWindow(SQLController.removeObjectDuplicate(SQLController.getWordsObjects(rawText)))
+
     def setDatabaseLocation(self):
         settings.databaseLocation = QFileDialog.getExistingDirectory()
         settings.databaseLocation += 'Data/defaultDatabase.db'
         settings.commitToFile()
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
-        # settings.commitToFile()
 
     def changeIsFolderSetting(self, state):
         settings.isFolder = state

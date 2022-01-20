@@ -42,6 +42,7 @@ class Ui_wordRandom(object):
         font.setPointSize(14)
         self.questionListWidget.setFont(font)
 
+
         self.centralLayout.addWidget(self.questionListWidget)
 
         self.answerAndQuestionWidget = QWidget(self.centralwidget)
@@ -150,7 +151,6 @@ class Ui_wordRandom(object):
 
         QMetaObject.connectSlotsByName(wordRandom)
         self.wordRandomObject = wordRandom
-        self.customConnect()
 
 
     # setupUi
@@ -182,17 +182,18 @@ class Ui_wordRandom(object):
                 self.buttonClicked('C')
             elif key.vk == 100 or key.vk == 52:
                 self.buttonClicked('D')
+            elif key.vk == 82:
+                self.prepareQuestion(self.questionAllList)
             # elif key.char == keyboard.Key.enter:
             #     self.setCommit()
         except AttributeError:
             pass
 
-
-    def customConnect(self):
+    def customConnect(self, questionList):
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
         self.questionListWidget.currentItemChanged.connect(self.itemPosChanged)
         self.questionListWidget.clicked.connect(self.itemPosChanged)
-        self.questionList = SQLController.getAllObjects()
+        self.questionList = questionList
         self.actionReset.triggered.connect(partial(self.prepareQuestion, self.questionList))
         self.prepareQuestion(self.questionList)
         self.answerAButton.clicked.connect(partial(self.buttonClicked, 'A'))
@@ -236,8 +237,11 @@ class Ui_wordRandom(object):
                                                                                    len=self.questionLength)
         self.answer = [[i, 0] for i in range(len(self.answerList))]
         self.questionListWidget.addItems([f'Câu {i + 1}' for i in range(len(self.answerList))])
-        self.questionListWidget.setCurrentRow(0)
+        self.wordRandomObject.setWindowTitle(
+            f"Random {self.questionType.capitalize()} - {self.answerType.capitalize()},"
+            f" Lenght: {len(self.questionList)}, Total: {len(self.questionAllList)}")
 
+        self.questionListWidget.setCurrentRow(0)
     def randomWordSetting(self):
         try:
             self.wordRandomSettingDialog = QDialog()

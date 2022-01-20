@@ -20,6 +20,9 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName(u"Settings")
         Settings.resize(561, 70)
+
+        Settings.setWindowTitle("Settings")
+
         sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -124,6 +127,8 @@ class Ui_Settings(object):
         self.mainObject = Settings
         self.var = {}
         self.len = 0
+
+        self.quitButton.setFocusPolicy(Qt.NoFocus)
     # setupUi
 
     def retranslateUi(self, Settings):

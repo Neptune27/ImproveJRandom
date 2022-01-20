@@ -1,15 +1,15 @@
 import random
-import jsonController
 import SQLController
-import wordController
-from classType import japanWords
 
 
 def randomWordInWordList(wordList: list, **kwargs) -> list:
     randomList = []
     wordListToChoose = []
     if kwargs.get('len') and kwargs.get('len') != 0:
-        wordListToChoose = random.sample(wordList, k=kwargs.get('len'))
+        try:
+            wordListToChoose = random.sample(wordList, k=kwargs.get('len'))
+        except ValueError:
+            print("Sample larger than population or is negative")
     else:
         wordListToChoose = wordList
     for i in wordListToChoose:

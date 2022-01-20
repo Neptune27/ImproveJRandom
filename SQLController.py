@@ -60,8 +60,9 @@ def multipleObjToArray(objs):
     return temporary
 
 
-def replaceWord(obj):
-    cur.execute("""INSERT INTO jpWords()""")
+def deleteIndex(kanji):
+    conn.execute(f"""DELETE FROM jpWords WHERE kanji='{str(kanji)}'""")
+    conn.commit()
 
 
 def getWord(type, word):
@@ -131,6 +132,12 @@ def findObjectInDatabase(words, **kwargs):
 def getAllObjects():
     return databaseToObjects(cur.execute("SELECT * FROM jpWords").fetchall())
 
+
+def getWordsObjects(words):
+    results = []
+    for word in words:
+        results.append(databaseToObjects(getWord('kanji', word)))
+    return results
 
 if __name__ == "__main__":
     print(databaseToObjects(getWord('kanji', '愛')))

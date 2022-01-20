@@ -72,35 +72,25 @@
 #     print('a')
 
 
+# cho N* in từ 1 đến N, sum
+# a = range(5)
+
+def op(a, b, *args, **kwargs):
+    print(args)
+    print(kwargs)
+    print(a + b)
+    if kwargs.get('key'):
+        o = a + b
+        for i in args:
+            o += i
+        print(o)
+    else:
+        print(a + b)
+    od(**kwargs)
 
 
-class MainWindow(QtGui.):
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
-        self.setupUi()
-
-    def setupUi(self):
-        self.setObjectName("MainWindow")
-        self.resize(277, 244)
-        self.statusbar = QtGui.QStatusBar()
-        self.statusbar.setObjectName("statusbar")
-        self.setStatusBar(self.statusbar)
-
-    def closeEvent(self, event):
-        result = QtGui.QMessageBox.question(self,
-                                            "Confirm Exit...",
-                                            "Are you sure you want to exit ?",
-                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-        event.ignore()
-
-        if result == QtGui.QMessageBox.Yes:
-            event.accept()
+def od(**kwargs):
+    print(f'auscn {kwargs}')
 
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    mainWindow = MainWindow()
-    mainWindow.show()
-    sys.exit(app.exec_())
+op(2, 3, 4, 5, key=True)

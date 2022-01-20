@@ -7,19 +7,12 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-import asyncio
 import json
 from functools import partial
 
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
-import time
-
-import SQLController
-import jsonController
-import translateProcess
-import wordController
 import multiprocessing
 
 
@@ -30,6 +23,7 @@ class Ui_ProcessBarDialog(object):
         ProcessBarDialog.resize(500, 118)
         ProcessBarDialog.show()
         self.objDialog = ProcessBarDialog
+        self.objDialog.setWindowTitle("Finding Words, please wait")
         self.verticalLayout = QVBoxLayout(ProcessBarDialog)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")

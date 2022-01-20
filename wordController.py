@@ -1,5 +1,3 @@
-import json
-
 import SQLController as sqlcon
 import jsonController
 import os
@@ -18,7 +16,10 @@ def filteredWords():
             どぢゃぢゅぢょばびぶべぼびゃびゅびょぱぴぷぺぽぴゃぴゅぴょアイウエオャュョカキクケコキャキュキョサシスセソシャシュショタチツテト
             チャチュチョナニヌネノニャニュニョハヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲンガギグゲゴギ
             ャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパピプペポピャピュピョっ ? ？　! 1234567890  = _ # 
-            ,:.();\ " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ …  「」ィェー々/[-]{}+<>
+            ,:.();\ " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ …  「」ィェー々/[-]{}+<>！（ァッ）
+            
+            ⼆⼀、⼈⼤⽅⽇⽬⾟⾳
+            
             ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂ ưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ'""")
         return filteredWords()
 
@@ -39,7 +40,7 @@ def filteredWords():
 #     return rawWords
 
 
-def deleteDuplicate(file: str, filter: str, **kwargs) -> str:
+def deleteDuplicate(file: str, filter: str, **kwargs):
     """
     kwargs:
 
