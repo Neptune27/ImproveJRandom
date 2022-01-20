@@ -169,6 +169,11 @@ class Ui_wordRandom(object):
     # retranslateUi
     def keyboardOnRelease(self, key):
         try:
+            if key == keyboard.Key.enter:
+                self.setCommit()
+        except AttributeError:
+            pass
+        try:
             if key.vk == 97 or key.vk == 49:
                 self.buttonClicked('A')
             elif key.vk == 98 or key.vk == 50:
@@ -177,6 +182,8 @@ class Ui_wordRandom(object):
                 self.buttonClicked('C')
             elif key.vk == 100 or key.vk == 52:
                 self.buttonClicked('D')
+            # elif key.char == keyboard.Key.enter:
+            #     self.setCommit()
         except AttributeError:
             pass
 
@@ -319,6 +326,7 @@ class Ui_wordRandom(object):
 
     def setCommit(self):
         self.commit = True
+
         for index in range(self.questionListWidget.count()):
             try:
                 if self.answer[index][0].kanji == self.answerList[index].kanji:
@@ -327,7 +335,16 @@ class Ui_wordRandom(object):
                     self.questionListWidget.item(index).setForeground(self.colorRed)
             except AttributeError:
                 self.questionListWidget.item(index).setForeground(self.colorBlue)
-        self.itemPosChanged()
+        self.updateIndex()
+
+    def updateIndex(self):
+        """
+        This method make key listener not crash when set it to setCommit method, idk why it crash, maybe something
+        incompatible with keyboardListener and TextBrowser.setText, so, calling it by IndexChanged method instead
+        """
+        currentIndex = self.questionListWidget.currentIndex().row()
+        self.questionListWidget.setCurrentRow(currentIndex + 1)
+        self.questionListWidget.setCurrentRow(currentIndex)
 
     def resizeTextToFit(self, text, button: QPushButton):
         if text is None:
