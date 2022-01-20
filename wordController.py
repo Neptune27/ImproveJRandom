@@ -1,6 +1,7 @@
+import os
+
 import SQLController as sqlcon
 import jsonController
-import os
 
 settings = jsonController.Settings()
 
@@ -154,7 +155,7 @@ def splitString(file, length=10):
 #     if word is None:
 #         pass
 #     else:
-#         return japanWords(kanji=word[1], mean=word[2], english=word[3], vietnamese=word[4], on=word[5], kun=word[6],
+#         return JapanWords(kanji=word[1], mean=word[2], english=word[3], vietnamese=word[4], on=word[5], kun=word[6],
 #                           level=word[7])
 
 

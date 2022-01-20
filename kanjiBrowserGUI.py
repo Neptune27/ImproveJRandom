@@ -1,25 +1,27 @@
-
 import traceback
 from functools import partial
+from multiprocessing import Process, freeze_support
+from typing import List
+
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
-import SQLController
-import saveDialog
-import wordController
-import translateProcess
-from jsonController import Settings
-import randomWordWindow
-import progressBarUI
-import InSelectedItemsGUI
-import translateWindowGUI
 
-from multiprocessing import Process, freeze_support
-from classType import japanWords
+import InSelectedItemsGUI
+import SQLController
+import fileBrowserDialog
+import progressBarUI
+import randomWordWindow
+import translateProcess
+import translateWindowGUI
+import wordController
+from classType import JapanWords
+from jsonController import Settings
 
 # from importlib import reload
 
 settings = Settings()
+
 
 class Ui_kanjiIndex(object):
     def setupUi(self, kanjiIndex):
@@ -606,6 +608,7 @@ class Ui_kanjiIndex(object):
 
     def customConnect(self):
         self.fillterWord('')
+        self.rawText = fileBrowserDialog.FileReader()
 
         self.wordListWidget.currentItemChanged.connect(self.item_click)
         self.fillterLineEdit.textChanged.connect(partial(self.fillterWord, absolute=False))
@@ -640,7 +643,7 @@ class Ui_kanjiIndex(object):
 
     def applyTextChangedToDatabase(self):
         index = self.wordListWidget.currentIndex().row()
-        japanWordObject = japanWords()
+        japanWordObject = JapanWords()
         japanWordObject.kanji = self.kanjiEdit.text()
         japanWordObject.vietnamese = self.vietnameseBrowser.toPlainText()
         japanWordObject.english = self.englishPlainEdit.toPlainText()
@@ -756,7 +759,7 @@ class Ui_kanjiIndex(object):
         self.maziiUrlEdit.setText(
             f"<a href=\"https://mazii.net/search/kanji?dict=javi&query={word.kanji}&hl=vi-VN\">https://mazii.net/search/kanji?dict=javi&query={word.kanji}&hl=vi-VN</a>")
 
-    def setWordList(self, wordslist: list):
+    def setWordList(self, wordslist: List):
         self.wordListWidget.addItems([word.kanji for word in wordslist])
 
     def searchBoxEditWrapper(self):
@@ -766,9 +769,12 @@ class Ui_kanjiIndex(object):
             self.fillterWord(self.fillterLineEdit.text(), absolute=False)
 
     def searchKanji(self):
-        settings.inputPath = self.wordLocationBoxEdit.text()
-        settings.commitToFile()
-        rawText, filteredText = self.fileToWord(settings.inputPath, settings.isFolder, self.searchBoxEdit.toPlainText())
+        # settings.inputPath = self.wordLocationBoxEdit.text()
+        # settings.commitToFile()
+        try:
+            rawText, filteredText = self.deleteDuplicateWithAdd(str(self.rawText), self.searchBoxEdit.toPlainText())
+        except Exception as ex:
+            print(ex)
 
         if filteredText != '':
             self.appendTraslated(filteredText)
@@ -776,16 +782,16 @@ class Ui_kanjiIndex(object):
         if rawText != '':
             self.fillterWord(rawText, absolute=True, searched=True)
 
-    def fileToWord(self, fileLocation, isFolder, addtional=''):
-        rawText = ''.join(wordController.readFile(fileLocation, folder=isFolder))
-        rawText = rawText + addtional
-        return wordController.deleteDuplicate(rawText, wordController.filteredWords(), database=True, org=2)
+    def deleteDuplicateWithAdd(self, rawText, addtional=''):
+        # rawText = ''.join(wordController.readFile(fileLocation, folder=isFolder))
+        # rawText += addtional
+        return wordController.deleteDuplicate(rawText + addtional, wordController.filteredWords(), database=True, org=2)
 
     def appendTraslated(self, text):
         if text != '':
-            _, text = wordController.deleteDuplicate(text, wordController.filteredWords(), database=True, org=2)
+            text = wordController.deleteDuplicate(text, wordController.filteredWords(), database=True)
             if len(text) >= 3:
-                self.initializeLoadingBar()
+                self.initLoadingBar()
             translateProcess.appendTraslated(text)
 
     def toIndexText(self, text, **kwargs) -> None:
@@ -796,15 +802,18 @@ class Ui_kanjiIndex(object):
             if self.wordListWidget.item(i).text() == text:
                 self.wordListWidget.setCurrentRow(i)
                 return
+        else:
+            self.setWordList(SQLController.getAllObjects())
+            self.toIndexText(text)
 
-    def initializeLoadingBar(self):
+    def initLoadingBar(self):
         processBar = Process(target=progressBarUI.runProgressBar)
         processBar.start()
 
     def resetWord(self):
         if self.kanjiEdit.text() != '':
             index = self.wordListWidget.currentIndex().row()
-            self.initializeLoadingBar()
+            self.initLoadingBar()
             translateProcess.appendTraslated(self.kanjiEdit.text(), 1, True)
             self.searchBoxEditWrapper()
             self.wordListWidget.setCurrentRow(index)
@@ -832,32 +841,40 @@ class Ui_kanjiIndex(object):
         self.wordListWidget.setCurrentRow(self.prevRow)
 
     def getDirectoryOrFile(self):
+        self.rawText.resetText()
         if settings.isFolder:
-            settings.inputPath = QFileDialog.getExistingDirectory()
-            self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
+            self.rawText.getFolderTexts()
+            # settings.inputPath = QFileDialog.getExistingDirectory()
+            # self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
         else:
-            filePaths = QFileDialog.getOpenFileNames()
-            settings.inputPath = ", ".join(filePaths[0])
-            self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
-        settings.commitToFile()
+            self.rawText.getFileTexts()
+        self.wordLocationBoxEdit.setText(self.rawText.getFileLocations())
+        # print(self.rawText)
+        # filePaths = QFileDialog.getOpenFileNames()
+        # settings.inputPath = ", ".join(filePaths[0])
+        # self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
+        # settings.commitToFile()
 
     def randomGetFile(self):
-        inputPath = QFileDialog.getOpenFileNames()
-        rawText, filteredText = self.fileToWord(", ".join(inputPath[0]), False)
+        inputPath = fileBrowserDialog.FileReader()
+        inputPath.getFileTexts()
+
+        rawText, filteredText = self.deleteDuplicateWithAdd(str(inputPath))
         print(f"[INFO] Input: '{rawText}'\n[INFO] Will be searched: {filteredText}")
         self.appendTraslated(filteredText)
         self.randomWordWindow(SQLController.removeObjectDuplicate(SQLController.getWordsObjects(rawText)))
 
     def randomGetFileWithSelection(self):
-        inputPath = QFileDialog.getOpenFileNames()
-        rawText, filteredText = self.fileToWord(", ".join(inputPath[0]), False)
+        inputPath = fileBrowserDialog.FileReader()
+        inputPath.getFileTexts()
+        rawText, filteredText = self.deleteDuplicateWithAdd(str(inputPath))
         print(f"[INFO] Input: '{rawText}'\n[INFO] Will be searched: {filteredText}")
         self.appendTraslated(filteredText)
         self.inSelectedItemDialog(SQLController.removeObjectDuplicate(SQLController.getWordsObjects(rawText)))
 
     def setDatabaseLocation(self):
-        settings.databaseLocation = QFileDialog.getExistingDirectory()
-        settings.databaseLocation += 'Data/defaultDatabase.db'
+        databaseLocation = fileBrowserDialog.DatabaseLocation(settings.databaseLocation)
+        settings.databaseLocation = str(databaseLocation.databaseLocation)
         settings.commitToFile()
         self.databaseLocationAddress.setPlainText(settings.databaseLocation)
 
@@ -869,18 +886,21 @@ class Ui_kanjiIndex(object):
         text = ''
         for index in range(self.wordListWidget.count()):
             text += self.wordListWidget.item(index).text()
-        self.initSaveDialog(text)
+        self.initSaveDialog(text, 'Current Kanji List')
+        # fileBrowserDialog.FileReader()
 
     def saveAllWordsList(self) -> None:
         all_word_objs = SQLController.getAllObjects()
         text = ''
         for word_obj in all_word_objs:
             text += word_obj.kanji
-        self.initSaveDialog(text)
+        self.initSaveDialog(text, 'All Kanji List')
 
-    def initSaveDialog(self, text):
-        saveDialog.SaveDialog(text)
+    def initSaveDialog(self, text, heading=None):
+        fileBrowserDialog.SaveDialog(text, heading)
 
+    def fileReaderText(self) -> None:
+        fileBrowserDialog.FileReader()
 
 if __name__ == "__main__":
     import sys

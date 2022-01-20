@@ -198,8 +198,8 @@
              <property name="title">
                  <string>File</string>
              </property>
-             <addaction name="actionSubmit_2"/>
-             <addaction name="actionReset_2"/>
+             <addaction name="actionSubmit"/>
+             <addaction name="actionReset"/>
              <addaction name="actionSettings"/>
          </widget>
          <widget class="QMenu" name="menuSave">
@@ -237,27 +237,27 @@
          <addaction name="menuFile"/>
          <addaction name="menuSave"/>
      </widget>
+     <!-- <action name="actionSubmit">
+         <property name="text">
+             <string>Submit</string>
+         </property>
+     </action> -->
+     <!-- <action name="actionReset">
+         <property name="text">
+             <string>Reset</string>
+         </property>
+     </action> -->
+     <action name="actionRegenerate">
+         <property name="text">
+             <string>Regenerate</string>
+         </property>
+     </action>
      <action name="actionSubmit">
          <property name="text">
              <string>Submit</string>
          </property>
      </action>
      <action name="actionReset">
-         <property name="text">
-             <string>Reset</string>
-         </property>
-     </action>
-     <action name="actionRegenerate">
-         <property name="text">
-             <string>Regenerate</string>
-         </property>
-     </action>
-     <action name="actionSubmit_2">
-         <property name="text">
-             <string>Submit</string>
-         </property>
-     </action>
-     <action name="actionReset_2">
          <property name="text">
              <string>Reset</string>
          </property>

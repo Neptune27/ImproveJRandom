@@ -2,7 +2,7 @@ import sqlite3 as sql
 from typing import List
 
 import jsonController
-from classType import japanWords
+from classType import JapanWords
 
 
 def connectDatabase():
@@ -30,11 +30,11 @@ def appendMultiple(arr, update=False):
     conn.executemany('REPLACE INTO jpWords(kanji, means, englishMeanings, vietnameseMeanings, onReading, kunReadings,\
                     strokes, radicals, parts, level, taught) VALUES(?,?,?,?,?,?,?,?,?,?,?)', temporary)
     conn.commit()
-    # a = cur.execute("""SELECT EXISTS(SELECT 1 FROM jpWords WHERE japanWords=? LIMIT 1)""",(temporary[0][0], )).fetchone()[0]
+    # a = cur.execute("""SELECT EXISTS(SELECT 1 FROM jpWords WHERE JapanWords=? LIMIT 1)""",(temporary[0][0], )).fetchone()[0]
     # print(a)
 
 
-def updateDatabase(obj: japanWords):
+def updateDatabase(obj: JapanWords):
     conn.execute(f"""UPDATE jpWords SET means = '{obj.mean}' , englishMeanings = '{obj.english}' ,
                             vietnameseMeanings = '{obj.vietnamese}' , onReading = '{obj.on}' , kunReadings = '{obj.kun}' , 
                             strokes = '{obj.strokes}' , radicals = '{obj.radicals}' , parts = '{obj.parts}' , level = '{obj.level}',
@@ -90,11 +90,11 @@ def getSimilarWords(type, words):
 def databaseToObjects(words: list or tuple):
     try:
         if type(words[0]) is not list and type(words[0]) is not tuple:
-            return japanWords(kanji=words[1], mean=words[2], english=words[3], vietnamese=words[4], on=words[5],
+            return JapanWords(kanji=words[1], mean=words[2], english=words[3], vietnamese=words[4], on=words[5],
                               kun=words[6], strokes=words[7], radicals=words[8], parts=words[9], level=words[10],
                               taught=words[11])
         else:
-            return [japanWords(kanji=word[1], mean=word[2], english=word[3], vietnamese=word[4], on=word[5],
+            return [JapanWords(kanji=word[1], mean=word[2], english=word[3], vietnamese=word[4], on=word[5],
                                kun=word[6], strokes=word[7], radicals=word[8], parts=word[9], level=word[10],
                                taught=word[11]) for word in words]
 
@@ -132,11 +132,11 @@ def findObjectInDatabase(words, **kwargs):
     return removeObjectDuplicate(results)
 
 
-def getAllObjects() -> List[japanWords]:
+def getAllObjects() -> List[JapanWords]:
     return databaseToObjects(cur.execute("SELECT * FROM jpWords").fetchall())
 
 
-def getWordsObjects(words):
+def getWordsObjects(words: str) -> List[JapanWords]:
     results = []
     for word in words:
         results.append(databaseToObjects(getWord('kanji', word)))
@@ -159,9 +159,9 @@ if __name__ == "__main__":
     # print(databaseToObjects(getSimilarWords('englishMeanings', 'l')))
 # print(getSimilarWords('englishMeanings','lo'))
 
-# a = japanWords(kanji = 1,on = 2, level = 4, english = 5,vietnamese = 6, mean = 'a')
+# a = JapanWords(kanji = 1,on = 2, level = 4, english = 5,vietnamese = 6, mean = 'a')
 # print(a.toArray())
-# b = japanWords(2,3,4,5)
-# c = japanWords(5,6,7,8)
+# b = JapanWords(2,3,4,5)
+# c = JapanWords(5,6,7,8)
 # ar = [a]
 # appendMultiple(ar)

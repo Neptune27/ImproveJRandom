@@ -1,11 +1,12 @@
-from requests_html import AsyncHTMLSession
 import asyncio
+import json
 
+from requests_html import AsyncHTMLSession
+
+import SQLController
 import jsonController
 import wordController
-import json
-from classType import japanWords
-import SQLController
+from classType import JapanWords
 
 
 def getLinkJisho(word):
@@ -93,7 +94,7 @@ def jointMultipleSegments(kanjiList, mazii=[], jisho=[]):
 
 
 def jointSegments(kanji, mazii: list, jisho: list):
-    return japanWords(kanji=kanji, english=jisho[0], mean=mazii[0], vietnamese=mazii[1], on=mazii[2], kun=mazii[3],
+    return JapanWords(kanji=kanji, english=jisho[0], mean=mazii[0], vietnamese=mazii[1], on=mazii[2], kun=mazii[3],
                       strokes=jisho[2], radicals=jisho[3], parts=jisho[4], level=mazii[4], taught=jisho[1])
 
 

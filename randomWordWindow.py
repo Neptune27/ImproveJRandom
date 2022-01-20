@@ -10,16 +10,16 @@
 import json
 import math
 import random
-from pynput import keyboard
 from functools import partial
 
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
+from pynput import keyboard
 
+import fileBrowserDialog
 import jsonController
 import randomController
-import saveDialog
 from randomWordDialog import Ui_Settings
 
 
@@ -293,18 +293,21 @@ class Ui_wordRandom(object):
         self.wordRandomObject.closeEvent = self.closeEvent
 
         # File action bar
-        self.actionSubmit.triggered.connect(self.setCommit)
+        self.actionSubmit_2.triggered.connect(self.setCommit)
         self.actionSettings.triggered.connect(self.randomWordSetting)
-        self.actionReset.triggered.connect(partial(self.prepareQuestion, self.questionList))
+        self.actionReset_2.triggered.connect(partial(self.prepareQuestion, self.questionAllList))
 
         # Save action bar
-        self.actionCurrent_Words.triggered.connect(partial(self.saveWord, 'currentWords'))
-        self.actionWrong_Words.triggered.connect(partial(self.saveWord, 'currentWrongWords'))
-        self.actionRight_Words.triggered.connect(partial(self.saveWord, 'currentRightWords'))
+        self.actionCurrent_Words.triggered.connect(partial(self.saveWord, 'currentWords', 'Current Words'))
+        self.actionWrong_Words.triggered.connect(partial(self.saveWord, 'currentWrongWords', 'Current Wrong Words'))
+        self.actionRight_Words.triggered.connect(partial(self.saveWord, 'currentRightWords', 'Current Right Words'))
 
-        self.actionWords_in_Current_Session.triggered.connect(partial(self.saveWord, 'wordsInSession'))
-        self.actionWrong_Words_in_Current_Session.triggered.connect(partial(self.saveWord, 'wrongWordInSession'))
-        self.actionRight_Words_in_Current_Session.triggered.connect(partial(self.saveWord, 'rightWordInSession'))
+        self.actionWords_in_Current_Session.triggered.connect(
+            partial(self.saveWord, 'wordsInSession', 'Words In Session'))
+        self.actionWrong_Words_in_Current_Session.triggered.connect(
+            partial(self.saveWord, 'wrongWordInSession', 'Wrong Words In Session'))
+        self.actionRight_Words_in_Current_Session.triggered.connect(
+            partial(self.saveWord, 'rightWordInSession', 'Right Words In Session'))
 
         # Autosave Init
         self.actionAuto_Save_Words.setChecked(self.mainSettings.autoSaveWords)
@@ -315,9 +318,9 @@ class Ui_wordRandom(object):
         self.actionAuto_Save_Words.triggered.connect(
             partial(self.setSettings, 'autoSaveWords', self.actionAuto_Save_Words))
         self.actionAuto_Save_Right_Words.triggered.connect(
-            partial(self.setSettings, 'autoSaveWords', not self.actionAuto_Save_Right_Words))
+            partial(self.setSettings, 'autoSaveRightWords', self.actionAuto_Save_Right_Words))
         self.actionAuto_Save_Wrong_Words.triggered.connect(
-            partial(self.setSettings, 'autoSaveWords', not self.actionAuto_Save_Wrong_Words))
+            partial(self.setSettings, 'autoSaveWrongWords', self.actionAuto_Save_Wrong_Words))
 
         self.colorYellow = QColor('#DEA00B')
         self.colorGreen = QColor('#00ad0c')
@@ -526,22 +529,32 @@ class Ui_wordRandom(object):
                     self.answer[index][0] = self.questionList[index][3]
                     self.answer[index][1] = 'D'
                 self.questionListWidget.item(index).setForeground(self.colorYellow)
+            else:
+                if whichButton == 'A':
+                    self.kanjiBrowser.toIndexText(self.questionList[index][0].kanji)
+                elif whichButton == 'B':
+                    self.kanjiBrowser.toIndexText(self.questionList[index][1].kanji)
+                elif whichButton == 'C':
+                    self.kanjiBrowser.toIndexText(self.questionList[index][2].kanji)
+                elif whichButton == 'D':
+                    self.kanjiBrowser.toIndexText(self.questionList[index][3].kanji)
         except AttributeError:
             self.questionListWidget.setCurrentRow(0)
-        if index + 2 > self.questionListWidget.count():
-            index = 0
-            self.questionListWidget.setCurrentRow(index)
-        else:
-            self.questionListWidget.setCurrentRow(index + 1)
+        if self.commit is False:
+            if index + 2 > self.questionListWidget.count():
+                index = 0
+                self.questionListWidget.setCurrentRow(index)
+            else:
+                self.questionListWidget.setCurrentRow(index + 1)
 
-    def saveWord(self, typed):
+    def saveWord(self, typed, heading=None):
         words = getattr(self, typed)
-        saveDialog.SaveDialog(words)
+        fileBrowserDialog.SaveDialog(words, heading)
 
     def autoSaveInit(self):
-        self.autoSaveWords = saveDialog.AutoSave(self.mainSettings.words)
-        self.autoSaveRightWords = saveDialog.AutoSave(self.mainSettings.correctWords)
-        self.autoSaveWrongWords = saveDialog.AutoSave(self.mainSettings.wrongWords)
+        self.autoSaveWords = fileBrowserDialog.AutoSave(self.mainSettings.words)
+        self.autoSaveRightWords = fileBrowserDialog.AutoSave(self.mainSettings.correctWords)
+        self.autoSaveWrongWords = fileBrowserDialog.AutoSave(self.mainSettings.wrongWords)
 
     def autoSaveSave(self):
         if self.actionAuto_Save_Words.isChecked():

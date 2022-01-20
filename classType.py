@@ -1,4 +1,4 @@
-class japanWords:
+class JapanWords:
     def __init__(self, **kwargs):
         """kanji: kanji word
 
@@ -28,7 +28,7 @@ class japanWords:
         self.taught = self.assignValue('taught')
 
     def toDict(self):
-        return {'japanWords': self.kanji, 'englishMeanings': self.english,
+        return {'JapanWords': self.kanji, 'englishMeanings': self.english,
                 'vietnameseMeanings': self.vietnamese, 'on': self.on, 'kun': self.kun, 'level': self.level}
 
     def toArray(self):

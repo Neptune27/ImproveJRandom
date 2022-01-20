@@ -3,9 +3,6 @@ from functools import partial
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
-import SQLController
-from classType import japanWords
-from kanjiBrowserGUI import Ui_kanjiIndex
 
 
 class Ui_Selector(object):
@@ -130,7 +127,7 @@ class Ui_Selector(object):
 
     # retranslateUi
 
-    def customConnect(self, mainWindow: Ui_kanjiIndex):
+    def customConnect(self, mainWindow):
         self.mainWindow = mainWindow
         self.wordFromList = self.sortedListByKanji(self.wordFromList)
         self.wordToList = []
