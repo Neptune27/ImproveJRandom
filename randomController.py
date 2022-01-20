@@ -1,8 +1,11 @@
 import random
+from typing import List
+
 import SQLController
+from classType import japanWords
 
 
-def randomWordInWordList(wordList: list, **kwargs) -> list:
+def randomWordInWordList(wordList: List, **kwargs) -> List[japanWords]:
     randomList = []
     wordListToChoose = []
     if kwargs.get('len') and kwargs.get('len') != 0:

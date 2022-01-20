@@ -21,7 +21,6 @@ from classType import japanWords
 
 settings = Settings()
 
-
 class Ui_kanjiIndex(object):
     def setupUi(self, kanjiIndex):
         if not kanjiIndex.objectName():
@@ -49,6 +48,16 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_Item_s_In_File.setObjectName(u"actionIn_Selected_Item_s_In_File")
         self.actionIn_Database = QAction(kanjiIndex)
         self.actionIn_Database.setObjectName(u"actionIn_Database")
+        self.actionCurrent_List = QAction(kanjiIndex)
+        self.actionCurrent_List.setObjectName(u"actionCurrent_List")
+        self.actionAll_Word = QAction(kanjiIndex)
+        self.actionAll_Word.setObjectName(u"actionAll_Word")
+        self.actionAll_Words = QAction(kanjiIndex)
+        self.actionAll_Words.setObjectName(u"actionAll_Words")
+        self.actionCurrent_Words_List = QAction(kanjiIndex)
+        self.actionCurrent_Words_List.setObjectName(u"actionCurrent_Words_List")
+        self.actionAll_Words_List = QAction(kanjiIndex)
+        self.actionAll_Words_List.setObjectName(u"actionAll_Words_List")
         self.centralwidget = QWidget(kanjiIndex)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralLayout = QGridLayout(self.centralwidget)
@@ -242,7 +251,7 @@ class Ui_kanjiIndex(object):
         self.maziiUrlEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.maziiUrlEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.maziiUrlEdit.setReadOnly(True)
-        # self.maziiUrlEdit.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.maziiUrlEdit.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.maziiUrlEdit.setOpenExternalLinks(True)
 
         self.urlswidgetLayout.addWidget(self.maziiUrlEdit)
@@ -388,6 +397,7 @@ class Ui_kanjiIndex(object):
 
         self.horizontalLayout_3.addWidget(self.folderCheckBox)
 
+
         self.horizontalLayout_6.addWidget(self.widget_6)
 
         self.wordLocationBoxEdit = QLineEdit(self.wordlocationwidget)
@@ -449,6 +459,7 @@ class Ui_kanjiIndex(object):
 
         self.horizontalLayout.addWidget(self.pushButton_2)
 
+
         self.searchBoxWidgetLayout.addWidget(self.widget)
 
         self.navigationButtonWidget = QWidget(self.searchBoxWidget)
@@ -478,7 +489,9 @@ class Ui_kanjiIndex(object):
 
         self.navigationButtonWidgetLayout.addWidget(self.nextButton)
 
+
         self.searchBoxWidgetLayout.addWidget(self.navigationButtonWidget)
+
 
         self.horizontalLayout_2.addWidget(self.searchBoxWidget)
 
@@ -501,9 +514,12 @@ class Ui_kanjiIndex(object):
         self.menuFile.setObjectName(u"menuFile")
         self.menuRandom = QMenu(self.menuFile)
         self.menuRandom.setObjectName(u"menuRandom")
+        self.menuSave = QMenu(self.menubar)
+        self.menuSave.setObjectName(u"menuSave")
         kanjiIndex.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuSave.menuAction())
         self.menuFile.addAction(self.menuRandom.menuAction())
         self.menuFile.addAction(self.actionApply)
         self.menuFile.addAction(self.actionReset)
@@ -512,6 +528,8 @@ class Ui_kanjiIndex(object):
         self.menuRandom.addAction(self.actionIn_Selected_Item_s_In_File)
         self.menuRandom.addAction(self.actionIn_Selected_Item_s)
         self.menuRandom.addAction(self.actionIn_Database)
+        self.menuSave.addAction(self.actionCurrent_Words_List)
+        self.menuSave.addAction(self.actionAll_Words_List)
 
         self.retranslateUi(kanjiIndex)
 
@@ -529,6 +547,11 @@ class Ui_kanjiIndex(object):
         self.actionIn_Selected_Item_s_In_File.setText(
             QCoreApplication.translate("kanjiIndex", u"Select Item(s) in File", None))
         self.actionIn_Database.setText(QCoreApplication.translate("kanjiIndex", u"In Database", None))
+        self.actionCurrent_List.setText(QCoreApplication.translate("kanjiIndex", u"Current List", None))
+        self.actionAll_Word.setText(QCoreApplication.translate("kanjiIndex", u"All Words", None))
+        self.actionAll_Words.setText(QCoreApplication.translate("kanjiIndex", u"All Words", None))
+        self.actionCurrent_Words_List.setText(QCoreApplication.translate("kanjiIndex", u"Current Words List", None))
+        self.actionAll_Words_List.setText(QCoreApplication.translate("kanjiIndex", u"All Words List", None))
         self.englishPlainEdit.setPlainText("")
         self.phienEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                           u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -536,7 +559,8 @@ class Ui_kanjiIndex(object):
                                                           "p, li { white-space: pre-wrap; }\n"
                                                           "</style></head><body style=\" font-family:'Segoe UI'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
                                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                    </p>\n"
-                                                          "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u00c1I                                                                </p></body></html>",
+                                                          "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                     </p>\n"
+                                                          "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\u00c1I                                                                 </p></body></html>",
                                                           None))
         self.levelLineEdit.setText("")
         self.kanjiEdit.setText("")
@@ -549,7 +573,9 @@ class Ui_kanjiIndex(object):
                                                              "p, li { white-space: pre-wrap; }\n"
                                                              "</style></head><body style=\" font-family:'Segoe UI'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
                                                              "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                                </p>\n"
-                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">https://jisho.org/search/%E6%84%9B%20%23kanji                                                                            </p></body></html>",
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                                 </p>\n"
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">https://jisho.org/search/%E6%84%9B%20%23kanji                                                                            "
+                                                             "                                                                                </p></body></html>",
                                                              None))
         self.maziiUrlEdit.setHtml(QCoreApplication.translate("kanjiIndex",
                                                              u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -557,7 +583,9 @@ class Ui_kanjiIndex(object):
                                                              "p, li { white-space: pre-wrap; }\n"
                                                              "</style></head><body style=\" font-family:'Segoe UI'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
                                                              "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                                </p>\n"
-                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://mazii.net/search/kanji?dict=javi&amp;query=%E6%84%9B&amp;hl=en-US\"><span style=\" text-decoration: underline; color:#0000ff;\">https://mazii.net/search/kanji?dict=javi&amp;query=%E6%84%9B&amp;hl=en-US</span></a>                                                                            </p></body></html>",
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">                                                                                 </p>\n"
+                                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://mazii.net/search/kanji?dict=javi&amp;query=%E6%84%9B&amp;hl=en-US\"><span style=\" text-decoration: und"
+                                                             "erline; color:#0000ff;\">https://mazii.net/search/kanji?dict=javi&amp;query=%E6%84%9B&amp;hl=en-US</span></a>                                                                                                                                                            </p></body></html>",
                                                              None))
         self.radicalPlainEdit.setPlainText("")
         self.partPlainEdit.setPlainText("")
@@ -572,6 +600,7 @@ class Ui_kanjiIndex(object):
         self.nextButton.setText(QCoreApplication.translate("kanjiIndex", u"Next", None))
         self.menuFile.setTitle(QCoreApplication.translate("kanjiIndex", u"File", None))
         self.menuRandom.setTitle(QCoreApplication.translate("kanjiIndex", u"Random", None))
+        self.menuSave.setTitle(QCoreApplication.translate("kanjiIndex", u"Save", None))
         pass
     # retranslateUi
 
@@ -597,8 +626,10 @@ class Ui_kanjiIndex(object):
 
         self.actionApply.triggered.connect(self.applyTextChangedToDatabase)
         self.actionReset.triggered.connect(self.resetWord)
-        # self.actionDelete.triggered.connect(self.deleteIndex)
-        self.actionDelete.triggered.connect(self.testing)
+        self.actionDelete.triggered.connect(self.deleteIndex)
+
+        self.actionCurrent_Words_List.triggered.connect(self.saveCurrentWordList)
+        self.actionAll_Words_List.triggered.connect(self.saveAllWordsList)
 
         self.actionIn_Selected_File.triggered.connect(self.randomGetFile)
         self.actionIn_Selected_Item_s_In_File.triggered.connect(self.randomGetFileWithSelection)
@@ -834,8 +865,21 @@ class Ui_kanjiIndex(object):
         settings.isFolder = state
         settings.commitToFile()
 
-    def testing(self):
-        a = saveDialog.SaveDialog()
+    def saveCurrentWordList(self) -> None:
+        text = ''
+        for index in range(self.wordListWidget.count()):
+            text += self.wordListWidget.item(index).text()
+        self.initSaveDialog(text)
+
+    def saveAllWordsList(self) -> None:
+        all_word_objs = SQLController.getAllObjects()
+        text = ''
+        for word_obj in all_word_objs:
+            text += word_obj.kanji
+        self.initSaveDialog(text)
+
+    def initSaveDialog(self, text):
+        saveDialog.SaveDialog(text)
 
 
 if __name__ == "__main__":
@@ -849,4 +893,3 @@ if __name__ == "__main__":
     kanjiBrowserUi.customConnect()
     kanjiBrowserWindow.show()
     sys.exit(app.exec())
-

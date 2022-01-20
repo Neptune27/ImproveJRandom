@@ -16,6 +16,9 @@ class Settings:
             self.isFolder = self.var["isFolder"]
             self.deepLAPI = self.var["deepLAPI"]
             self.googleCurrentLanguage = self.var['googleCurrentLanguage']
+            self.correctWords = self.var['correctWords']
+            self.words = self.var['words']
+            self.wrongWords = self.var['wrongWords']
             self.assignVariable()
         except Exception:
             self.setDefaultSettings()
@@ -29,6 +32,9 @@ class Settings:
         self.writeToJson("isFolder", True, self.jsonPath)
         self.writeToJson("deepLAPI", '', self.jsonPath)
         self.writeToJson('googleCurrentLanguage', 'english', self.jsonPath)
+        self.writeToJson('correctWords', '.\\Data\\Auto Save\\Correct Words\\', self.jsonPath)
+        self.writeToJson('words', '.\\Data\\Auto Save\\Words\\', self.jsonPath)
+        self.writeToJson('wrongWords', '.\\Data\\Auto Save\\Wrong Words\\', self.jsonPath)
         self.assignVariable()
 
     def writeToJson(self, var, text, path):
@@ -47,6 +53,9 @@ class Settings:
             self.isFolder = self.var["isFolder"]
             self.deepLAPI = self.var["deepLAPI"]
             self.googleCurrentLanguage = self.var['googleCurrentLanguage']
+            self.correctWord = self.var['correctWords']
+            self.words = self.var['words']
+            self.wrongWords = self.var['wrongWords']
         except Exception as ex:
             self.setDefaultSettings()
 

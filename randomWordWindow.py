@@ -17,21 +17,39 @@ from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
 
-import SQLController
 import jsonController
 import randomController
+import saveDialog
 from randomWordDialog import Ui_Settings
 
 
 class Ui_wordRandom(object):
     def setupUi(self, wordRandom):
+        if not wordRandom.objectName():
+            wordRandom.setObjectName(u"wordRandom")
         wordRandom.resize(721, 600)
         self.actionSubmit = QAction(wordRandom)
         self.actionSubmit.setObjectName(u"actionSubmit")
         self.actionReset = QAction(wordRandom)
         self.actionReset.setObjectName(u"actionReset")
+        self.actionRegenerate = QAction(wordRandom)
+        self.actionRegenerate.setObjectName(u"actionRegenerate")
+        self.actionSubmit_2 = QAction(wordRandom)
+        self.actionSubmit_2.setObjectName(u"actionSubmit_2")
+        self.actionReset_2 = QAction(wordRandom)
+        self.actionReset_2.setObjectName(u"actionReset_2")
         self.actionSettings = QAction(wordRandom)
         self.actionSettings.setObjectName(u"actionSettings")
+        self.actionCurrent_Words = QAction(wordRandom)
+        self.actionCurrent_Words.setObjectName(u"actionCurrent_Words")
+        self.actionWrong_Words = QAction(wordRandom)
+        self.actionWrong_Words.setObjectName(u"actionWrong_Words")
+        # self.actionWords_in_Current_Sessions = QAction(wordRandom)
+        # self.actionWords_in_Current_Sessions.setObjectName(u"actionWords_in_Current_Sessions")
+        self.actionWrong_Words_in_Current_Session = QAction(wordRandom)
+        self.actionWrong_Words_in_Current_Session.setObjectName(u"actionWrong_Words_in_Current_Session")
+        self.actionWords_in_Current_Session = QAction(wordRandom)
+        self.actionWords_in_Current_Session.setObjectName(u"actionWords_in_Current_Session")
         self.centralwidget = QWidget(wordRandom)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralLayout = QHBoxLayout(self.centralwidget)
@@ -41,7 +59,6 @@ class Ui_wordRandom(object):
         font = QFont()
         font.setPointSize(14)
         self.questionListWidget.setFont(font)
-
 
         self.centralLayout.addWidget(self.questionListWidget)
 
@@ -64,6 +81,7 @@ class Ui_wordRandom(object):
         self.questionBrowser.setFont(font1)
 
         self.questionWidgetLayout.addWidget(self.questionBrowser)
+
 
         self.answerAndQuestionWidgetLayout.addWidget(self.questionWidget)
 
@@ -132,40 +150,55 @@ class Ui_wordRandom(object):
         self.centralLayout.setStretch(0, 1)
         self.centralLayout.setStretch(1, 7)
         wordRandom.setCentralWidget(self.centralwidget)
+        self.statusbar = QStatusBar(wordRandom)
+        self.statusbar.setObjectName(u"statusbar")
+        wordRandom.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(wordRandom)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 721, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
+        self.menuSave = QMenu(self.menubar)
+        self.menuSave.setObjectName(u"menuSave")
         wordRandom.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(wordRandom)
-        self.statusbar.setObjectName(u"statusbar")
-        wordRandom.setStatusBar(self.statusbar)
 
         self.menubar.addAction(self.menuFile.menuAction())
-        self.menuFile.addAction(self.actionSubmit)
-        self.menuFile.addAction(self.actionReset)
+        self.menubar.addAction(self.menuSave.menuAction())
+        self.menuFile.addAction(self.actionSubmit_2)
+        self.menuFile.addAction(self.actionReset_2)
         self.menuFile.addAction(self.actionSettings)
+        self.menuSave.addAction(self.actionCurrent_Words)
+        self.menuSave.addAction(self.actionWrong_Words)
+        self.menuSave.addAction(self.actionWords_in_Current_Session)
+        self.menuSave.addAction(self.actionWrong_Words_in_Current_Session)
 
         self.retranslateUi(wordRandom)
 
         QMetaObject.connectSlotsByName(wordRandom)
         self.wordRandomObject = wordRandom
-
-
     # setupUi
 
     def retranslateUi(self, wordRandom):
-        wordRandom.setWindowTitle(QCoreApplication.translate("wordRandom", u"MainWindow", None))
+        wordRandom.setWindowTitle(QCoreApplication.translate("wordRandom", u"Random Word", None))
         self.actionSubmit.setText(QCoreApplication.translate("wordRandom", u"Submit", None))
         self.actionReset.setText(QCoreApplication.translate("wordRandom", u"Reset", None))
+        self.actionRegenerate.setText(QCoreApplication.translate("wordRandom", u"Regenerate", None))
+        self.actionSubmit_2.setText(QCoreApplication.translate("wordRandom", u"Submit", None))
+        self.actionReset_2.setText(QCoreApplication.translate("wordRandom", u"Reset", None))
         self.actionSettings.setText(QCoreApplication.translate("wordRandom", u"Settings", None))
+        self.actionCurrent_Words.setText(QCoreApplication.translate("wordRandom", u"Current Words", None))
+        self.actionWrong_Words.setText(QCoreApplication.translate("wordRandom", u"Wrong Words", None))
+        # self.actionWords_in_Current_Sessions.setText(QCoreApplication.translate("wordRandom", u"Words in Current Sessions", None))
+        self.actionWrong_Words_in_Current_Session.setText(
+            QCoreApplication.translate("wordRandom", u"Wrong Words in Current Session", None))
+        self.actionWords_in_Current_Session.setText(
+            QCoreApplication.translate("wordRandom", u"Words in Current Session", None))
         self.answerDButton.setText(QCoreApplication.translate("wordRandom", u"D", None))
         self.answerCButton.setText(QCoreApplication.translate("wordRandom", u"C", None))
         self.answerBButton.setText(QCoreApplication.translate("wordRandom", u"B", None))
         self.answerAButton.setText(QCoreApplication.translate("wordRandom", u"A", None))
         self.menuFile.setTitle(QCoreApplication.translate("wordRandom", u"File", None))
-
+        self.menuSave.setTitle(QCoreApplication.translate("wordRandom", u"Save", None))
     # retranslateUi
     def keyboardOnRelease(self, key):
         try:
@@ -190,13 +223,19 @@ class Ui_wordRandom(object):
             pass
 
     def customConnect(self, questionList, kanjiBrowser):
+        self.wordsInSection = ''
+        self.wrongWordInSession = ''
+        self.currentWords = ''
+        self.currentWrongWords = ''
+
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
         self.questionListWidget.currentItemChanged.connect(self.itemPosChanged)
         self.questionListWidget.clicked.connect(self.itemPosChanged)
         self.questionList = questionList
         self.kanjiBrowser = kanjiBrowser
-        self.actionReset.triggered.connect(partial(self.prepareQuestion, self.questionList))
+
         self.prepareQuestion(self.questionList)
+
         self.answerAButton.clicked.connect(partial(self.buttonClicked, 'A'))
         self.answerBButton.clicked.connect(partial(self.buttonClicked, 'B'))
         self.answerCButton.clicked.connect(partial(self.buttonClicked, 'C'))
@@ -204,8 +243,16 @@ class Ui_wordRandom(object):
 
         self.wordRandomObject.closeEvent = self.closeEvent
 
+        # File action bar
         self.actionSubmit.triggered.connect(self.setCommit)
         self.actionSettings.triggered.connect(self.randomWordSetting)
+        self.actionReset.triggered.connect(partial(self.prepareQuestion, self.questionList))
+
+        # Save action bar
+        self.actionCurrent_Words.triggered.connect(self.save_words_in_current_session)
+        self.actionWrong_Words.triggered.connect(self.save_wrong_words_in_current_session)
+        self.actionWords_in_Current_Session.triggered.connect(self.save_words_in_session)
+        self.actionWrong_Words_in_Current_Session.triggered.connect(self.save_wrong_words_in_session)
 
         self.colorYellow = QColor('#DEA00B')
         self.colorGreen = QColor('#00ad0c')
@@ -236,6 +283,14 @@ class Ui_wordRandom(object):
         self.questionLength = self.var['len']
         self.answerList, self.questionList = randomController.randomWordInWordList(questionList,
                                                                                    len=self.questionLength)
+
+        # Add current random word for save
+        self.currentWords = ''.join([word_obj.kanji for word_obj in self.answerList])
+        for text in self.currentWords:
+            if text not in self.wordsInSection:
+                self.wordsInSection += text
+        self.currentWrongWords = ''
+
         self.answer = [[i, 0] for i in range(len(self.answerList))]
         self.questionListWidget.addItems([f'Câu {i + 1}' for i in range(len(self.answerList))])
         self.wordRandomObject.setWindowTitle(
@@ -340,9 +395,17 @@ class Ui_wordRandom(object):
                     self.questionListWidget.item(index).setForeground(self.colorGreen)
                 else:
                     self.questionListWidget.item(index).setForeground(self.colorRed)
+                    if self.answerList[index].kanji not in self.currentWrongWords:
+                        self.currentWrongWords += self.answerList[index].kanji
             except AttributeError:
                 self.questionListWidget.item(index).setForeground(self.colorBlue)
+                if self.answerList[index].kanji not in self.currentWrongWords:
+                    self.currentWrongWords += self.answerList[index].kanji
         self.updateIndex()
+
+        for text in self.currentWrongWords:
+            if text not in self.wrongWordInSession:
+                self.wrongWordInSession += text
 
     def updateIndex(self):
         """
@@ -375,22 +438,37 @@ class Ui_wordRandom(object):
 
     def buttonClicked(self, whichButton):
         index = self.questionListWidget.currentIndex().row()
-        if self.commit is False:
-            if whichButton == 'A':
-                self.answer[index][0] = self.questionList[index][0]
-                self.answer[index][1] = 'A'
-            elif whichButton == 'B':
-                self.answer[index][0] = self.questionList[index][1]
-                self.answer[index][1] = 'B'
-            elif whichButton == 'C':
-                self.answer[index][0] = self.questionList[index][2]
-                self.answer[index][1] = 'C'
-            elif whichButton == 'D':
-                self.answer[index][0] = self.questionList[index][3]
-                self.answer[index][1] = 'D'
-            self.questionListWidget.item(index).setForeground(self.colorYellow)
+        try:
+            if self.commit is False:
+                if whichButton == 'A':
+                    self.answer[index][0] = self.questionList[index][0]
+                    self.answer[index][1] = 'A'
+                elif whichButton == 'B':
+                    self.answer[index][0] = self.questionList[index][1]
+                    self.answer[index][1] = 'B'
+                elif whichButton == 'C':
+                    self.answer[index][0] = self.questionList[index][2]
+                    self.answer[index][1] = 'C'
+                elif whichButton == 'D':
+                    self.answer[index][0] = self.questionList[index][3]
+                    self.answer[index][1] = 'D'
+                self.questionListWidget.item(index).setForeground(self.colorYellow)
+        except AttributeError:
+            self.questionListWidget.setCurrentRow(0)
         if index + 2 > self.questionListWidget.count():
             index = 0
             self.questionListWidget.setCurrentRow(index)
         else:
             self.questionListWidget.setCurrentRow(index + 1)
+
+    def save_words_in_current_session(self):
+        saveDialog.SaveDialog(self.currentWords)
+
+    def save_wrong_words_in_current_session(self):
+        saveDialog.SaveDialog(self.currentWrongWords)
+
+    def save_words_in_session(self):
+        saveDialog.SaveDialog(self.wordsInSection)
+
+    def save_wrong_words_in_session(self):
+        saveDialog.SaveDialog(self.wrongWordInSession)

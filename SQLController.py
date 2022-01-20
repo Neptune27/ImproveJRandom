@@ -1,4 +1,6 @@
 import sqlite3 as sql
+from typing import List
+
 import jsonController
 from classType import japanWords
 
@@ -130,7 +132,7 @@ def findObjectInDatabase(words, **kwargs):
     return removeObjectDuplicate(results)
 
 
-def getAllObjects():
+def getAllObjects() -> List[japanWords]:
     return databaseToObjects(cur.execute("SELECT * FROM jpWords").fetchall())
 
 

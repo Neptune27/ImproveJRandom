@@ -184,6 +184,10 @@
                                                                     margin-bottom:0px; margin-left:0px;
                                                                     margin-right:0px; -qt-block-indent:0;
                                                                     text-indent:0px;&quot;&gt; &lt;/p&gt;
+                                                                    &lt;p style=&quot; margin-top:0px;
+                                                                    margin-bottom:0px; margin-left:0px;
+                                                                    margin-right:0px; -qt-block-indent:0;
+                                                                    text-indent:0px;&quot;&gt; &lt;/p&gt;
                                                                     &lt;p align=&quot;center&quot; style=&quot;
                                                                     margin-top:0px; margin-bottom:0px; margin-left:0px;
                                                                     margin-right:0px; -qt-block-indent:0;
@@ -398,8 +402,7 @@
                                                                             <enum>Qt::ScrollBarAlwaysOff</enum>
                                                                         </property>
                                                                         <property name="plainText">
-                                                                            <string>
-                                                                            </string>
+                                                                            <string/>
                                                                         </property>
                                                                     </widget>
                                                                 </item>
@@ -481,6 +484,10 @@
                                                                                 &lt;p style=&quot; margin-top:0px;
                                                                                 margin-bottom:0px; margin-left:0px;
                                                                                 margin-right:0px; -qt-block-indent:0;
+                                                                                text-indent:0px;&quot;&gt; &lt;/p&gt;
+                                                                                &lt;p style=&quot; margin-top:0px;
+                                                                                margin-bottom:0px; margin-left:0px;
+                                                                                margin-right:0px; -qt-block-indent:0;
                                                                                 text-indent:0px;&quot;&gt;https://jisho.org/search/%E6%84%9B%20%23kanji
                                                                                 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                                                                             </string>
@@ -550,6 +557,10 @@
                                                                                 &lt;p style=&quot; margin-top:0px;
                                                                                 margin-bottom:0px; margin-left:0px;
                                                                                 margin-right:0px; -qt-block-indent:0;
+                                                                                text-indent:0px;&quot;&gt; &lt;/p&gt;
+                                                                                &lt;p style=&quot; margin-top:0px;
+                                                                                margin-bottom:0px; margin-left:0px;
+                                                                                margin-right:0px; -qt-block-indent:0;
                                                                                 text-indent:0px;&quot;&gt;&lt;a href=&quot;https://mazii.net/search/kanji?dict=javi&amp;amp;query=%E6%84%9B&amp;amp;hl=en-US&quot;&gt;&lt;span
                                                                                 style=&quot; text-decoration: underline;
                                                                                 color:#0000ff;&quot;&gt;https://mazii.net/search/kanji?dict=javi&amp;amp;query=%E6%84%9B&amp;amp;hl=en-US&lt;/span&gt;&lt;/a&gt;
@@ -557,7 +568,7 @@
                                                                             </string>
                                                                         </property>
                                                                         <property name="textInteractionFlags">
-                                                                            <set>Qt::NoTextInteraction</set>
+                                                                            <set>Qt::TextBrowserInteraction</set>
                                                                         </property>
                                                                         <property name="openExternalLinks">
                                                                             <bool>true</bool>
@@ -1096,7 +1107,15 @@
                 <addaction name="actionReset"/>
                 <addaction name="actionDelete"/>
             </widget>
+            <widget class="QMenu" name="menuSave">
+                <property name="title">
+                    <string>Save</string>
+                </property>
+                <addaction name="actionCurrent_Words_List"/>
+                <addaction name="actionAll_Words_List"/>
+            </widget>
             <addaction name="menuFile"/>
+            <addaction name="menuSave"/>
         </widget>
         <action name="actionIn_Selected_File">
             <property name="text">
@@ -1136,6 +1155,31 @@
         <action name="actionIn_Database">
             <property name="text">
                 <string>In Database</string>
+            </property>
+        </action>
+        <action name="actionCurrent_List">
+            <property name="text">
+                <string>Current List</string>
+            </property>
+        </action>
+        <action name="actionAll_Word">
+            <property name="text">
+                <string>All Words</string>
+            </property>
+        </action>
+        <action name="actionAll_Words">
+            <property name="text">
+                <string>All Words</string>
+            </property>
+        </action>
+        <action name="actionCurrent_Words_List">
+            <property name="text">
+                <string>Current Words List</string>
+            </property>
+        </action>
+        <action name="actionAll_Words_List">
+            <property name="text">
+                <string>All Words List</string>
             </property>
         </action>
     </widget>
