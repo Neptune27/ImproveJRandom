@@ -66,7 +66,6 @@ async def asyncWords(words, type):
 
 def asyncSegmentsSession(words, chunks, type):
     temp = []
-    test = ''
     results = []
     counter = 0
     totalWords = 0
