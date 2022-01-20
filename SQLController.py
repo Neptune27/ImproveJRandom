@@ -72,9 +72,9 @@ def getWord(type, word):
     return cur.execute(f"""SELECT * FROM jpWords WHERE {type}=?""", (word)).fetchone()
 
 
-def getAllWord(type, word):
-    return cur.execute(f"""SELECT * FROM jpWords WHERE {type}=?""", (word)).fetchall()
-
+# def getAllWords(type):
+#     currentCur = cur.execute(f"""SELECT {type} FROM jpWords""")
+#     return ' '.join([i[0] for i in currentCur.fetchall()])
 
 def getSimilarWords(type, words):
     try:

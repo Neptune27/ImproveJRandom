@@ -25,6 +25,7 @@ def initWarningBox(text, title):
     warning.setStandardButtons(QMessageBox.Ok)
     warning.exec()
 
+
 class SaveDialog(QFileDialog):
     def __init__(self, texts, heading=None):
         super().__init__()

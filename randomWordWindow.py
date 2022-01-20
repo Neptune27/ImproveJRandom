@@ -11,6 +11,7 @@ import json
 import math
 import random
 from functools import partial
+from typing import List
 
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
@@ -336,7 +337,7 @@ class Ui_wordRandom(object):
         del self.wordRandomObject
         del self
 
-    def prepareQuestion(self, questionList: list, **kwargs):
+    def prepareQuestion(self, questionList: List, **kwargs):
         random.shuffle(questionList)
         self.questionAllList = questionList
         self.commit = False
@@ -353,6 +354,7 @@ class Ui_wordRandom(object):
                                                                                    len=self.questionLength)
 
         # Add current random word for save
+
         self.currentWords = ''.join([word_obj.kanji for word_obj in self.answerList])
         for text in self.currentWords:
             if text not in self.wordsInSession:

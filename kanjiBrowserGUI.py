@@ -765,8 +765,9 @@ class Ui_kanjiIndex(object):
         self.maziiUrlEdit.setText(
             f"<a href=\"https://mazii.net/search/kanji?dict=javi&query={word.kanji}&hl=vi-VN\">https://mazii.net/search/kanji?dict=javi&query={word.kanji}&hl=vi-VN</a>")
 
-    def setWordList(self, wordslist: List):
-        self.wordListWidget.addItems([word.kanji for word in wordslist])
+    def setWordList(self, wordslist: List, **kwargs):
+        self.wordListWidget.addItems(
+            [word.kanji for word in wordslist if self.wordListWidget.findItems(word.kanji, Qt.MatchExactly) == []])
 
     def searchBoxEditWrapper(self):
         if self.searchBoxEdit.toPlainText() != '':
@@ -797,11 +798,15 @@ class Ui_kanjiIndex(object):
     def appendTraslated(self, text):
         if text != '':
             text = wordController.deleteDuplicate(text, wordController.filteredWords(), database=True)
+            print(f'{text=} in AppendTraslated')
             if len(text) >= 3:
                 self.initLoadingBar()
             translateProcess.appendTraslated(text)
 
     def toIndexText(self, text, **kwargs) -> None:
+        if len(text) == 0:
+            return
+        text = wordController.deleteDuplicate(text, wordController.filteredWords())
         if kwargs.get('list') is not None:
             self.fillterWord(kwargs.get('list'), searched=True, absolute=True)
         for i in range(self.wordListWidget.count()):
@@ -811,7 +816,6 @@ class Ui_kanjiIndex(object):
                 return
         else:
             self.setWordList(SQLController.getAllObjects())
-            self.toIndexText(text)
 
     def initLoadingBar(self):
         processBar = Process(target=progressBarUI.runProgressBar)

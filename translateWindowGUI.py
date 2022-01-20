@@ -1,17 +1,21 @@
-import time
 from functools import partial
+from typing import List
 
+import deep_translator.exceptions
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
+from deep_translator import GoogleTranslator, DeepL
+
 # from importlib import reload
 import APIInput
-from deep_translator import GoogleTranslator, DeepL
 # import kanjiBrowserGUI
 # import SQLController
 # import wordController
+import SQLController
+import kanjiBrowserGUI
 from jsonController import Settings
-from typing import List
+
 setting = Settings()
 
 
@@ -87,6 +91,8 @@ class Ui_TranslateWindow(object):
         self.retranslateUi(TranslateWindow)
         QMetaObject.connectSlotsByName(TranslateWindow)
 
+        self.TranslateWindow: QMainWindow = TranslateWindow
+
     # setupUi
 
     def retranslateUi(self, TranslateWindow):
@@ -96,7 +102,7 @@ class Ui_TranslateWindow(object):
 
     # retranslateUi
 
-    def customConnect(self, kanjiBrowser):
+    def customConnect(self, kanjiBrowser: kanjiBrowserGUI.Ui_kanjiIndex):
         self.languageSetup = 0
 
         self.translationMode.addItem('Google Translator')
@@ -122,6 +128,8 @@ class Ui_TranslateWindow(object):
         self.timerTranslate.start()
 
         self.actionSet_DeepL_API_Key.triggered.connect(self.setDeepLAPIKey)
+        # self.TranslateWindow.close()
+        self.TranslateWindow.closeEvent = partial(self.closeWindow, self.TranslateWindow.closeEvent)
 
     def setDeepLAPIKey(self):
         self.oldText = self.inputTextEdit.toPlainText()
@@ -174,7 +182,10 @@ class Ui_TranslateWindow(object):
                     self.oldText = newTexts
                     text = self.simpleFormat(self.oldText)
                     self.kanjiBrowser.appendTraslated(text)
-                    translated_texts = self.translateController(newTexts, 'ja')
+                    try:
+                        translated_texts = self.translateController(newTexts, 'ja')
+                    except deep_translator.exceptions.NotValidPayload:
+                        pass
                     self.outputTextEdit.setPlainText('')
                     for translated_text in translated_texts:
                         self.outputTextEdit.appendPlainText(translated_text)
@@ -221,6 +232,13 @@ class Ui_TranslateWindow(object):
         # print(solution)
         return solution
 
+    def closeWindow(self, func, func2):
+        # print(a, func)
+        # print('a')
+        # print(f'{a=}, {func=}')
+        self.kanjiBrowser.setWordList(SQLController.getAllObjects())
+        # func()
+
     def setLanguageMode(self):
         modeText = self.translationMode.currentText()
         self.languageMode.clear()
@@ -239,7 +257,8 @@ class Ui_TranslateWindow(object):
         if len(text) == 1:
             return [GoogleTranslator(source=source, target=target).translate(text[0])]
         else:
-            return GoogleTranslator(source=source, target=target).translate_batch(text)
+            batch = GoogleTranslator(source=source, target=target).translate_batch(text)
+            return batch
 
     def translateDeepL(self, text, source, target):
         return DeepL(api_key=setting.deepLAPI, source=source, target=target, use_free_api=True).translate(text)
