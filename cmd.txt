@@ -1,0 +1,71 @@
+pyinstaller translateProcess.py --copy-metadata pyppeteer
+
+pyinstaller kanjiBrowserGUI.py --copy-metadata pyppeteer
+
+
+pyside6-uic kanjiBrowser.ui > kanjiBrowserGUI.py
+
+
+    def customConnect(self):
+        self.wordListWidget.currentItemChanged.connect(self.item_click)
+        self.fillterLineEdit.textChanged.connect(self.fillterWord)
+        # self.maziiUrlEdit.setOpenExternalLinks(True)
+        self.maziiUrlEdit.setText(
+            "<a href=\"http://www.google.com\">This is a link</a>")
+        # self.wordListWidget.item(1).setHidden(True)
+        self.nextButton.clicked.connect(self.nextPos)
+        self.prevButton.clicked.connect(self.prevPos)
+        self.fillterWord('')
+
+    def fillterWord(self, words):
+        self.wordListWidget.clear()
+        wordList = []
+        if self.fillterLineEdit.text() == '':
+            wordList = SQLController.getAllObjects()
+        else:
+            wordList = SQLController.findObjectInDatabase(f'{words}')
+        self.setWordList(wordList)
+        pass
+
+    def translateKanjiToUI(self, word):
+        word = SQLController.databaseToObjects(SQLController.getWord('kanji', f'{word}'))
+        self.kanjiEdit.setText(word.kanji)
+        self.vietnameseBrowser.setPlainText(word.vietnamese)
+        self.englishPlainEdit.setPlainText(word.english)
+        self.phienEdit.setText(f'{word.mean}')
+        self.levelLineEdit.setText(f'{word.level}')
+        self.strokeEdit.setPlainText(f'{word.strokes}')
+        self.gradeEdit.setPlainText(f'{word.taught}')
+
+    def setWordList(self, wordslist: list):
+        self.wordListWidget.addItems([word.kanji for word in wordslist])
+
+    def item_click(self, item):
+        self.translateKanjiToUI(item.text())
+        # print(item.)
+
+    def nextPos(self):
+        self.prevRow = self.wordListWidget.currentIndex().row() + 1
+        if self.prevRow == self.wordListWidget.count():
+            self.prevRow = 0
+        self.wordListWidget.setCurrentRow(self.prevRow)
+
+    def prevPos(self):
+        self.prevRow = self.wordListWidget.currentIndex().row() - 1
+        if self.prevRow == self.wordListWidget.count():
+            self.prevRow = 0
+        if self.prevRow < 0:
+            self.prevRow = self.wordListWidget.count() - 1
+        self.wordListWidget.setCurrentRow(self.prevRow)
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QApplication(sys.argv)
+    kanjiBrowserWindow = QMainWindow()
+    kanjiBrowserUi = Ui_kanjiIndex()
+    kanjiBrowserUi.setupUi(kanjiBrowserWindow)
+    kanjiBrowserUi.customConnect()
+    kanjiBrowserWindow.show()
+    sys.exit(app.exec())

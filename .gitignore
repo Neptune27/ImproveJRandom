@@ -10,3 +10,4 @@ test/
 *.docx
 *.txt
 *.ipynb
+*.log
