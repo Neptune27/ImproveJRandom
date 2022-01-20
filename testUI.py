@@ -1,6 +1,4 @@
-a = {i: None for i in range(10)}
-# print(a)
-# a = {}
-a[1] = 2
-# a[2] = 2
-print(a)
+b = {1: 2, 3: 4}
+c = {3: 3, 6: 3}
+b.update(c)
+print(b)

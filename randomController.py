@@ -12,7 +12,8 @@ def randomWordInWordList(wordList: List, **kwargs) -> List[JapanWords]:
         try:
             wordListToChoose = random.sample(wordList, k=kwargs.get('len'))
         except ValueError:
-            print("Sample larger than population or is negative")
+            print("[INFO] Sample larger than population or is negative, randomize all sample instead")
+            wordListToChoose = random.sample(wordList, k=len(wordList))
     else:
         wordListToChoose = wordList
     for i in wordListToChoose:

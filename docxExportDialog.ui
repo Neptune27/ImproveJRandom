@@ -142,21 +142,6 @@
                         <item>
                             <widget class="QWidget" name="widget_3" native="true">
                                 <layout class="QVBoxLayout" name="verticalLayout_4">
-                                    <property name="spacing">
-                                        <number>0</number>
-                                    </property>
-                                    <property name="leftMargin">
-                                        <number>3</number>
-                                    </property>
-                                    <property name="topMargin">
-                                        <number>0</number>
-                                    </property>
-                                    <property name="rightMargin">
-                                        <number>0</number>
-                                    </property>
-                                    <property name="bottomMargin">
-                                        <number>0</number>
-                                    </property>
                                     <item>
                                         <widget class="QCheckBox" name="englishBox">
                                             <property name="text">
@@ -182,15 +167,9 @@
                                         </widget>
                                     </item>
                                     <item>
-                                        <widget class="QLabel" name="dumbLabel">
-                                            <property name="sizePolicy">
-                                                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                                                    <horstretch>0</horstretch>
-                                                    <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                            </property>
+                                        <widget class="QCheckBox" name="colorizeBox">
                                             <property name="text">
-                                                <string/>
+                                                <string>Colorize</string>
                                             </property>
                                         </widget>
                                     </item>

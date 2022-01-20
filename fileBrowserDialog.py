@@ -2,13 +2,14 @@ import datetime
 import os
 import pathlib
 import traceback
+from typing import Union
 
 import docx
 import docx2txt
 from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
-from docx.shared import Pt
+from docx.shared import Pt, RGBColor
 
 import SQLController
 import docxExportDialog
@@ -27,10 +28,13 @@ def initWarningBox(text, title):
 
 
 class SaveDialog(QFileDialog):
-    def __init__(self, texts, heading=None):
+    def __init__(self, texts: Union[dict, str], typed=0, heading=None):
         super().__init__()
         self.heading = heading
         self.texts = texts
+        self.typed = typed
+
+        self.typeProcessing()
 
         if heading is None:
             self.heading = ''
@@ -50,9 +54,22 @@ class SaveDialog(QFileDialog):
             initWarningBox(f'Permission denied. Please close any app associated \nwith this file and try again.',
                            'Error')
 
+    def typeProcessing(self):
+        if type(self.texts) is dict:
+            if self.typed == 0:
+                self.textsDict = dict(self.texts)
+                self.texts = ''.join(i for i in self.texts)
+            else:
+                if self.typed == 2:
+                    self.textsDict = (
+                    {i: self.texts[i] for i in self.texts if self.texts[i] == 3 or self.texts[i] == self.typed})
+                    self.texts += ''.join(i for i in self.texts if self.texts[i] == 3)
+                else:
+                    self.textsDict = {i: self.texts[i] for i in self.texts if self.texts[i] == self.typed}
+                    self.texts = ''.join(i for i in self.texts if self.texts[i] == self.typed)
+
     def saveDocx(self):
         self.initDocxOptions()
-
         if self.docxOption.isAccepted:
             wordObjList = SQLController.getWordsObjects(self.texts)
             # print(save_location)
@@ -81,37 +98,50 @@ class SaveDialog(QFileDialog):
     def JPObjectToText(self, obj: JapanWords):
         text = ''
         self.index = 0
-        self.paragraphRun = self.document.add_paragraph()
+        # self.paragraphRun = self.document.add_paragraph()
         if self.docxOption.kanjiBox.isChecked() and self.docxOption.meansBox.isChecked():
-            self.checkFirst(f'{obj.kanji} - {obj.mean}', self.index)
+            self.checkFirst(f'{obj.kanji} - {obj.mean}', self.index, obj)
         else:
             if self.docxOption.kanjiBox.isChecked():
-                self.checkFirst(f'{obj.kanji}\n', self.index)
+                self.checkFirst(f'{obj.kanji}\n', self.index, obj)
             if self.docxOption.meansBox.isChecked():
-                self.checkFirst(f'{obj.mean}\n', self.index)
+                self.checkFirst(f'{obj.mean}\n', self.index, obj)
         if self.docxOption.englishBox.isChecked():
-            self.checkFirst(f'{obj.english}\n', self.index)
+            self.checkFirst(f'{obj.english}\n', self.index, obj)
         if self.docxOption.vietnameseBox.isChecked():
-            self.checkFirst(f'{obj.vietnamese}\n', self.index)
+            self.checkFirst(f'{obj.vietnamese}\n', self.index, obj)
         if self.docxOption.OnBox.isChecked():
-            self.checkFirst(f'On: {obj.on}'.replace(' ', ', ') + f'\n', self.index)
+            self.checkFirst(f'On: {obj.on}'.replace(' ', ', ') + f'\n', self.index, obj)
         if self.docxOption.kunBox.isChecked():
-            self.checkFirst(f'Kun: {obj.kun}'.replace(' ', ', ') + f'\n', self.index)
+            self.checkFirst(f'Kun: {obj.kun}'.replace(' ', ', ') + f'\n', self.index, obj)
         if self.docxOption.strokesBox.isChecked():
             self.checkFirst(f'{obj.strokes}\n', self.index)
         if self.docxOption.radicalsBox.isChecked():
-            self.checkFirst(f'{obj.radicals}'.replace('\n', ' ') + f'\n', self.index)
+            self.checkFirst(f'{obj.radicals}'.replace('\n', ' ') + f'\n', self.index, obj)
         if self.docxOption.partsBox.isChecked():
-            self.checkFirst(f'{obj.parts}'.replace('\n', ' ') + f'\n', self.index)
+            self.checkFirst(f'{obj.parts}'.replace('\n', ' ') + f'\n', self.index, obj)
         if self.docxOption.taughtBox.isChecked():
-            self.checkFirst(f'{obj.taught}\n', self.index)
+            self.checkFirst(f'{obj.taught}\n', self.index, obj)
 
-    def checkFirst(self, text, index):
+    def checkFirst(self, text, index, obj=None):
         if index == 0:
             heading = self.document.add_heading(level=2)
             run = heading.add_run(f'{text}:')
             font = run.font
             font.size = Pt(20)
+            try:
+                if self.docxOption.colorizeBox.isChecked():
+                    typed = self.textsDict.get(obj.kanji)
+                    if typed == 1:
+                        font.color.rgb = RGBColor(0x00, 0xad, 0x0c)
+                    elif typed == 2:
+                        font.color.rgb = RGBColor(0xf5, 0x01, 0x1f)
+                    # elif typed == 3:
+                    #     font.color.rgb = RGBColor(0x00,0x53,0xFA)
+            except AttributeError as ex:
+                print(ex)
+            except Exception as ex:
+                print(ex)
             self.paragraphRun = self.document.add_paragraph()
         else:
             self.paragraphRun.add_run(f'- {text}')
@@ -122,8 +152,9 @@ class SaveDialog(QFileDialog):
 
 
 class AutoSave:
-    def __init__(self, location):
-        self.text = ''
+    def __init__(self, location, options):
+        self.text = {}
+        self.options = options
         self.location = location
 
     def save(self):
@@ -136,8 +167,10 @@ class AutoSave:
         nowLoc = str(NOW_DATE_TIME.now())[:-7].replace(':', ' ')
         writeLoc = f"{self.dirLoc}{nowLoc}.txt"
         with open(writeLoc, 'w', encoding='UTF-8') as loc:
-            loc.write(self.text)
-
+            if self.options is None:
+                loc.write("".join(i for i in self.text))
+            else:
+                loc.write("".join(i for i in self.text if self.text[i] == self.options))
 
 
 class FileReader(QFileDialog):

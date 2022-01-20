@@ -74,7 +74,8 @@ def deleteDuplicate(file: str, filtered: str, **kwargs):
         file = ''.join(stringArr)
         for i in filtered:
             file = file.replace(i, '')
-    print(f'[INFO] Delete duplicate: {file=}')
+    if len(file) > 1:
+        print(f'[INFO] Delete duplicate: {file=}')
     file = chineseToKanji(file)
 
     i = 0

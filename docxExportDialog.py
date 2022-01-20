@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'docxExportDialog.ui'
-##
-## Created by: Qt User Interface Compiler version 6.1.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
 from functools import partial
 
 from PySide6.QtCore import *  # type: ignore
@@ -55,6 +46,7 @@ class Ui_DocxSelector(object):
 
         self.verticalLayout_2.addWidget(self.levelBox)
 
+
         self.horizontalLayout.addWidget(self.widget_2)
 
         self.widget_4 = QWidget(self.widget)
@@ -84,12 +76,12 @@ class Ui_DocxSelector(object):
 
         self.verticalLayout_3.addWidget(self.taughtBox)
 
+
         self.horizontalLayout.addWidget(self.widget_4)
 
         self.widget_3 = QWidget(self.widget)
         self.widget_3.setObjectName(u"widget_3")
         self.verticalLayout_4 = QVBoxLayout(self.widget_3)
-        self.verticalLayout_4.setSpacing(0)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.verticalLayout_4.setContentsMargins(3, 0, 0, 0)
         self.englishBox = QCheckBox(self.widget_3)
@@ -108,15 +100,10 @@ class Ui_DocxSelector(object):
 
         self.verticalLayout_4.addWidget(self.partsBox)
 
-        self.dumbLabel = QLabel(self.widget_3)
-        self.dumbLabel.setObjectName(u"dumbLabel")
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.dumbLabel.sizePolicy().hasHeightForWidth())
-        self.dumbLabel.setSizePolicy(sizePolicy)
+        self.colorizeBox = QCheckBox(self.widget_3)
+        self.colorizeBox.setObjectName(u"colorizeBox")
 
-        self.verticalLayout_4.addWidget(self.dumbLabel)
+        self.verticalLayout_4.addWidget(self.colorizeBox)
 
         self.horizontalLayout.addWidget(self.widget_3)
 
@@ -139,10 +126,9 @@ class Ui_DocxSelector(object):
 
         QMetaObject.connectSlotsByName(DocxSelector)
 
+        self.isAccepted = True
         self.DocxSelectorWindow = DocxSelector
         self.DocxSelectorWindow.reject = partial(self.cancel, self.DocxSelectorWindow.reject)
-        self.isAccepted = True
-
     # setupUi
 
     def retranslateUi(self, DocxSelector):
@@ -158,8 +144,7 @@ class Ui_DocxSelector(object):
         self.englishBox.setText(QCoreApplication.translate("DocxSelector", u"English Meanings", None))
         self.kunBox.setText(QCoreApplication.translate("DocxSelector", u"Kun Reading", None))
         self.partsBox.setText(QCoreApplication.translate("DocxSelector", u"Parts", None))
-        self.dumbLabel.setText("")
-
+        self.colorizeBox.setText(QCoreApplication.translate("DocxSelector", u"Colorize", None))
     # retranslateUi
 
     def cancel(self, func):

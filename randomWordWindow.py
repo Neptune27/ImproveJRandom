@@ -270,12 +270,14 @@ class Ui_wordRandom(object):
 
     def customConnect(self, questionList, kanjiBrowser):
         self.mainSettings = jsonController.Settings()
-        self.wordsInSession = ''
-        self.wrongWordInSession = ''
-        self.rightWordInSession = ''
-        self.currentWords = ''
-        self.currentWrongWords = ''
-        self.currentRightWords = ''
+        self.wordsInSession = {}
+        self.currentWords = {}
+        # self.wordsInSession = ''
+        # self.wrongWordInSession = ''
+        # self.rightWordInSession = ''
+        # self.currentWords = ''
+        # self.currentWrongWords = ''
+        # self.currentRightWords = ''
         self.autoSaveInit()
 
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
@@ -299,16 +301,16 @@ class Ui_wordRandom(object):
         self.actionReset_2.triggered.connect(partial(self.prepareQuestion, self.questionAllList))
 
         # Save action bar
-        self.actionCurrent_Words.triggered.connect(partial(self.saveWord, 'currentWords', 'Current Words'))
-        self.actionWrong_Words.triggered.connect(partial(self.saveWord, 'currentWrongWords', 'Current Wrong Words'))
-        self.actionRight_Words.triggered.connect(partial(self.saveWord, 'currentRightWords', 'Current Right Words'))
+        self.actionCurrent_Words.triggered.connect(partial(self.saveWord, self.currentWords, 0, 'Current Words'))
+        self.actionRight_Words.triggered.connect(partial(self.saveWord, self.currentWords, 1, 'Current Right Words'))
+        self.actionWrong_Words.triggered.connect(partial(self.saveWord, self.currentWords, 2, 'Current Wrong Words'))
 
         self.actionWords_in_Current_Session.triggered.connect(
-            partial(self.saveWord, 'wordsInSession', 'Words In Session'))
-        self.actionWrong_Words_in_Current_Session.triggered.connect(
-            partial(self.saveWord, 'wrongWordInSession', 'Wrong Words In Session'))
+            partial(self.saveWord, self.wordsInSession, 0, 'Words In Session'))
         self.actionRight_Words_in_Current_Session.triggered.connect(
-            partial(self.saveWord, 'rightWordInSession', 'Right Words In Session'))
+            partial(self.saveWord, self.wordsInSession, 1, 'Right Words In Session'))
+        self.actionWrong_Words_in_Current_Session.triggered.connect(
+            partial(self.saveWord, self.wordsInSession, 2, 'Wrong Words In Session'))
 
         # Autosave Init
         self.actionAuto_Save_Words.setChecked(self.mainSettings.autoSaveWords)
@@ -354,13 +356,7 @@ class Ui_wordRandom(object):
                                                                                    len=self.questionLength)
 
         # Add current random word for save
-
-        self.currentWords = ''.join([word_obj.kanji for word_obj in self.answerList])
-        for text in self.currentWords:
-            if text not in self.wordsInSession:
-                self.wordsInSession += text
-        self.currentWrongWords = ''
-        self.currentRightWords = ''
+        self.currentWords = {jpObject.kanji: None for jpObject in self.answerList}
 
         self.answer = [[i, 0] for i in range(len(self.answerList))]
         self.questionListWidget.addItems([f'Câu {i + 1}' for i in range(len(self.answerList))])
@@ -383,7 +379,7 @@ class Ui_wordRandom(object):
             print(ex)
 
     def itemPosChanged(self):
-        print(f'[INFO] Row currently selected is: {self.questionListWidget.currentIndex().row()}')
+        # print(f'[INFO] Row currently selected is: {self.questionListWidget.currentIndex().row()}')
         if self.commit and self.questionType == 'kanji':
             self.kanjiBrowser.toIndexText(self.questionBrowser.toPlainText())
         index = self.questionListWidget.currentIndex().row()
@@ -462,31 +458,46 @@ class Ui_wordRandom(object):
                 self.answerDButton.setStyleSheet("background-color: #F5011F")
 
     def setCommit(self):
+
         self.commit = True
 
         for index in range(self.questionListWidget.count()):
             try:
                 if self.answer[index][0].kanji == self.answerList[index].kanji:
                     self.questionListWidget.item(index).setForeground(self.colorGreen)
-                    self.currentRightWords += self.answerList[index].kanji
+                    # self.currentRightWords += self.answerList[index].kanji
+                    self.currentWords[self.answerList[index].kanji] = True
+                    try:
+                        if self.wordsInSession[self.answerList[index].kanji] == 2:
+                            pass
+                        else:
+                            self.wordsInSession[self.answerList[index].kanji] = 1
+                    except KeyError:
+                        self.wordsInSession[self.answerList[index].kanji] = 1
                 else:
                     self.questionListWidget.item(index).setForeground(self.colorRed)
-                    if self.answerList[index].kanji not in self.currentWrongWords:
-                        self.currentWrongWords += self.answerList[index].kanji
+                    self.currentWords[self.answerList[index].kanji] = 2
+                    self.wordsInSession[self.answerList[index].kanji] = 2
+                    # if self.answerList[index].kanji not in self.currentWrongWords:
+                    #     self.currentWrongWords += self.answerList[index].kanji
             except AttributeError:
                 self.questionListWidget.item(index).setForeground(self.colorBlue)
-                if self.answerList[index].kanji not in self.currentWrongWords:
-                    self.currentWrongWords += self.answerList[index].kanji
+                self.currentWords[self.answerList[index].kanji] = 3
+                self.wordsInSession[self.answerList[index].kanji] = 3
+                # if self.answerList[index].kanji not in self.currentWrongWords:
+                # self.currentWrongWords += self.answerList[index].kanji
         self.updateIndex()
 
-        for text in self.currentWrongWords:
-            if text not in self.wrongWordInSession:
-                self.wrongWordInSession += text
-
-        for text in self.currentRightWords:
-            if text not in self.rightWordInSession:
-                self.rightWordInSession += text
+        # for text in self.currentWrongWords:
+        #     if text not in self.wrongWordInSession:
+        #         self.wrongWordInSession += text
+        #
+        # for text in self.currentRightWords:
+        #     if text not in self.rightWordInSession:
+        #         self.rightWordInSession += text
         self.autoSaveSave()
+
+        # print(f"-------------------------\n[INFO] {self.wordsInSession=}\n[INFO] {self.currentWords=} \n-------------------------\n ")
 
     def updateIndex(self):
         """
@@ -552,24 +563,23 @@ class Ui_wordRandom(object):
             else:
                 self.questionListWidget.setCurrentRow(index + 1)
 
-    def saveWord(self, typed, heading=None):
-        words = getattr(self, typed)
-        fileBrowserDialog.SaveDialog(words, heading)
+    def saveWord(self, dictList: dict, options, heading=None):
+        fileBrowserDialog.SaveDialog(dictList, options, heading)
 
     def autoSaveInit(self):
-        self.autoSaveWords = fileBrowserDialog.AutoSave(self.mainSettings.words)
-        self.autoSaveRightWords = fileBrowserDialog.AutoSave(self.mainSettings.correctWords)
-        self.autoSaveWrongWords = fileBrowserDialog.AutoSave(self.mainSettings.wrongWords)
+        self.autoSaveWords = fileBrowserDialog.AutoSave(self.mainSettings.words, None)
+        self.autoSaveRightWords = fileBrowserDialog.AutoSave(self.mainSettings.correctWords, True)
+        self.autoSaveWrongWords = fileBrowserDialog.AutoSave(self.mainSettings.wrongWords, False)
 
     def autoSaveSave(self):
         if self.actionAuto_Save_Words.isChecked():
             self.autoSaveWords.text = self.currentWords
             self.autoSaveWords.save()
         if self.actionAuto_Save_Right_Words.isChecked():
-            self.autoSaveRightWords.text = self.currentRightWords
+            self.autoSaveRightWords.text = self.currentWords
             self.autoSaveRightWords.save()
         if self.actionAuto_Save_Wrong_Words.isChecked():
-            self.autoSaveWrongWords.text = self.currentWrongWords
+            self.autoSaveWrongWords.text = self.currentWords
             self.autoSaveWrongWords.save()
 
     def setSettings(self, attribute, typed: QAction) -> None:
