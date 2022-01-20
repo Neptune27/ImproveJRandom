@@ -140,7 +140,7 @@ class Ui_DocxSelector(object):
         QMetaObject.connectSlotsByName(DocxSelector)
 
         self.DocxSelectorWindow = DocxSelector
-        self.DocxSelectorWindow.reject = partial(self.cancel, self.DocxSelectorWindow.accept)
+        self.DocxSelectorWindow.reject = partial(self.cancel, self.DocxSelectorWindow.reject)
         self.isAccepted = True
 
     # setupUi

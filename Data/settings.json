@@ -2,7 +2,7 @@
   "databaseLocation": "D:/PycharmProjects/ImproveJRandom/Data/defaultDatabase.db",
   "inputPath": "D:/PycharmProjects/ImproveJRandom/Input/testFile2.txt, D:/PycharmProjects/ImproveJRandom/Input/逆光.txt",
   "filterPath": ".\\Data\\filterFile.txt",
-  "isFolder": false,
+  "isFolder": true,
   "deepLAPI": "",
   "googleCurrentLanguage": "Vietnamese",
   "correctWords": ".\\Data\\Auto Save\\Correct Words\\",

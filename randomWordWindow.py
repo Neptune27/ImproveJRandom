@@ -381,6 +381,7 @@ class Ui_wordRandom(object):
             print(ex)
 
     def itemPosChanged(self):
+        print(f'[INFO] Row currently selected is: {self.questionListWidget.currentIndex().row()}')
         if self.commit and self.questionType == 'kanji':
             self.kanjiBrowser.toIndexText(self.questionBrowser.toPlainText())
         index = self.questionListWidget.currentIndex().row()
@@ -390,6 +391,8 @@ class Ui_wordRandom(object):
         self.setTextButton('C', f'{self.answerType}', self.answerCButton, index)
         self.setTextButton('D', f'{self.answerType}', self.answerDButton, index)
         self.setButtonStyle(index)
+        if self.questionListWidget.currentIndex().row() < 0:
+            self.questionListWidget.setCurrentRow(0)
 
     def setTextQuestion(self, index, type):
         self.questionBrowser.setText(getattr(self.answerList[index], f'{type}'))

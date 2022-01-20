@@ -16,7 +16,7 @@ def filteredWords():
         return filteredWords()
 
 
-FILTERED_TEXT = """。『』「」々、　"""
+FILTERED_TEXT = """。『』「」々、⺗　"""
 
 CHINESE_REPLACE = {'⼀': '一', '⼆': '二', '⼈': '人', '⼄': '乙', '丨': '丨', '⼃': '丿', '⼅': '亅', '⼇': '亠', '⼉': '儿',
                    '⼊': '入',
@@ -74,7 +74,7 @@ def deleteDuplicate(file: str, filtered: str, **kwargs):
         file = ''.join(stringArr)
         for i in filtered:
             file = file.replace(i, '')
-    print(f'{file=}')
+    print(f'[INFO] Delete duplicate: {file=}')
     file = chineseToKanji(file)
 
     i = 0

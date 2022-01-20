@@ -612,6 +612,7 @@ class Ui_kanjiIndex(object):
 
         self.wordListWidget.currentItemChanged.connect(self.item_click)
         self.fillterLineEdit.textChanged.connect(partial(self.fillterWord, absolute=False))
+        self.wordLocationBoxEdit.textChanged.connect(self.resetWordLocation)
 
         self.nextButton.clicked.connect(self.nextPos)
         self.pushButton.clicked.connect(self.searchKanji)
@@ -714,6 +715,11 @@ class Ui_kanjiIndex(object):
         except Exception:
             traceback.print_exc()
 
+    def resetWordLocation(self):
+        if self.wordLocationBoxEdit.text() == '':
+            self.rawText.resetText()
+            self.fillterWord('')
+
     def fillterWord(self, words, **kwargs):
         self.wordListWidget.clear()
         wordList = []
@@ -773,6 +779,7 @@ class Ui_kanjiIndex(object):
         # settings.commitToFile()
         try:
             rawText, filteredText = self.deleteDuplicateWithAdd(str(self.rawText), self.searchBoxEdit.toPlainText())
+            # print(rawText, filteredText)
         except Exception as ex:
             print(ex)
 
@@ -844,6 +851,7 @@ class Ui_kanjiIndex(object):
         self.rawText.resetText()
         if settings.isFolder:
             self.rawText.getFolderTexts()
+            # print(self.rawText)
             # settings.inputPath = QFileDialog.getExistingDirectory()
             # self.wordLocationBoxEdit.setText(f'{settings.inputPath}')
         else:
