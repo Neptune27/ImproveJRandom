@@ -1,3 +1,4 @@
+import time
 from functools import partial
 
 from PySide6.QtCore import *  # type: ignore
@@ -10,7 +11,7 @@ from deep_translator import GoogleTranslator, DeepL
 # import SQLController
 # import wordController
 from jsonController import Settings
-
+from typing import List
 setting = Settings()
 
 
@@ -105,6 +106,7 @@ class Ui_TranslateWindow(object):
         self.setLanguageMode()
 
         self.oldText = ''
+        self.oldTextCursor = ''
         self.selectedState = False
         self.selectedOldText = ''
 
@@ -139,14 +141,18 @@ class Ui_TranslateWindow(object):
             else:
                 text = self.inputTextEdit.toPlainText()[self.cursor.selectionStart():self.cursor.selectionEnd()]
                 self.selectedState = True
-                self.oldText = text
+                self.oldTextCursor = text
             if self.selectedOldText != text:
                 if len(text) == 1:
-                    if self.oldText.count(text) >= 1:
-                        self.kanjiBrowser.toIndexText(text)
+                    if self.oldTextCursor.count(text) >= 1:
+                        self.kanjiBrowser.toIndexText(text, list=self.oldTextCursor)
                     else:
                         # self.translate()
-                        self.kanjiBrowser.toIndexText(text)
+                        if self.oldTextCursor != self.simpleFormat(self.oldText):
+                            self.oldTextCursor = self.simpleFormat(self.oldText)
+                            self.kanjiBrowser.toIndexText(text, list=self.oldTextCursor)
+                        else:
+                            self.kanjiBrowser.toIndexText(text)
                 elif len(text) == 0:
                     pass
                 else:
@@ -168,7 +174,10 @@ class Ui_TranslateWindow(object):
                     self.oldText = newTexts
                     text = self.simpleFormat(self.oldText)
                     self.kanjiBrowser.appendTraslated(text)
-                    self.outputTextEdit.setPlainText(self.translateController(newTexts, 'ja'))
+                    translated_texts = self.translateController(newTexts, 'ja')
+                    self.outputTextEdit.setPlainText('')
+                    for translated_text in translated_texts:
+                        self.outputTextEdit.appendPlainText(translated_text)
                     self.kanjiBrowser.fillterWord(text, searched=True, absolute=True)
         except RuntimeError as ex:
             print(ex)
@@ -184,14 +193,32 @@ class Ui_TranslateWindow(object):
             setting.commitToFile()
         self.languageSetup += 1
 
-    def translateController(self, text, source):
+    def translateController(self, text, source) -> List:
         modeText = self.translationMode.currentText()
         target = self.languageMode.currentText()
+        solution = []
+        len_text = len(text)
+        partial_texts = []
+        if len_text > 1970:
+            i = 0
+            while i <= len_text:
+                prev = i
+                if i + 1970 >= len_text:
+                    i = len_text + 1
+                else:
+                    i += 1970
+                partial_texts.append(text[prev:i])
+        else:
+            partial_texts.append(text)
+
         if modeText == 'Google Translator':
             # solution = GoogleTranslator(source=source, target=target.lower()).translate(text)
-            solution = self.translateGoogle(text, source, target.lower())
-        elif modeText == 'DeepL Translator':
-            solution = self.translateDeepL(text, source, target.lower())
+            solution = self.translateGoogle(partial_texts, source, target.lower())
+            # time.sleep(1)
+            # print(solution)
+        # elif modeText == 'DeepL Translator':
+        #     solution = self.translateDeepL(text, source, target.lower())
+        # print(solution)
         return solution
 
     def setLanguageMode(self):
@@ -208,8 +235,11 @@ class Ui_TranslateWindow(object):
                 self.languageMode.setCurrentIndex(i)
                 break
 
-    def translateGoogle(self, text, source, target):
-        return GoogleTranslator(source=source, target=target).translate(text)
+    def translateGoogle(self, text: List, source, target) -> List:
+        if len(text) == 1:
+            return [GoogleTranslator(source=source, target=target).translate(text[0])]
+        else:
+            return GoogleTranslator(source=source, target=target).translate_batch(text)
 
     def translateDeepL(self, text, source, target):
         return DeepL(api_key=setting.deepLAPI, source=source, target=target, use_free_api=True).translate(text)

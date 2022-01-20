@@ -673,7 +673,7 @@ class Ui_kanjiIndex(object):
             self.wordRandomWindow.setObjectName("Random Word")
             self.wordRandom = randomWordWindow.Ui_wordRandom()
             self.wordRandom.setupUi(self.wordRandomWindow)
-            self.wordRandom.customConnect(questionList)
+            self.wordRandom.customConnect(questionList, self)
             self.wordRandomWindow.show()
         except Exception:
             traceback.print_exc()
@@ -685,7 +685,7 @@ class Ui_kanjiIndex(object):
             words = words.split()
         for index in range(len(words)):
             words[index] = wordController.chineseToKanji(words[index])
-        print(f"[INFO] '{words}' is currently in Search")
+        # print(f"[INFO] '{words}' is currently in Search")
         # if kwargs.get('notSearch'):
         #     words = words[0]  # Because text in searchKanji is an array of len 1
         #     orgWords = wordController.deleteDuplicate(words, wordController.filteredWords())
@@ -755,11 +755,14 @@ class Ui_kanjiIndex(object):
                 self.initializeLoadingBar()
             translateProcess.appendTraslated(text)
 
-    def toIndexText(self, text) -> None:
+    def toIndexText(self, text, **kwargs) -> None:
+        if kwargs.get('list') is not None:
+            self.fillterWord(kwargs.get('list'), searched=True, absolute=True)
         for i in range(self.wordListWidget.count()):
             # print(self.wordListWidget.item(i))
             if self.wordListWidget.item(i).text() == text:
                 self.wordListWidget.setCurrentRow(i)
+                return
 
     def initializeLoadingBar(self):
         processBar = Process(target=progressBarUI.runProgressBar)

@@ -189,11 +189,12 @@ class Ui_wordRandom(object):
         except AttributeError:
             pass
 
-    def customConnect(self, questionList):
+    def customConnect(self, questionList, kanjiBrowser):
         self.answerAButton.clicked.connect(partial(self.resizeTextToFit, 'A', self.answerAButton))
         self.questionListWidget.currentItemChanged.connect(self.itemPosChanged)
         self.questionListWidget.clicked.connect(self.itemPosChanged)
         self.questionList = questionList
+        self.kanjiBrowser = kanjiBrowser
         self.actionReset.triggered.connect(partial(self.prepareQuestion, self.questionList))
         self.prepareQuestion(self.questionList)
         self.answerAButton.clicked.connect(partial(self.buttonClicked, 'A'))
@@ -255,6 +256,8 @@ class Ui_wordRandom(object):
             print(ex)
 
     def itemPosChanged(self):
+        if self.commit and self.questionType == 'kanji':
+            self.kanjiBrowser.toIndexText(self.questionBrowser.toPlainText())
         index = self.questionListWidget.currentIndex().row()
         self.setTextQuestion(index, f'{self.questionType}')
         self.setTextButton('A', f'{self.answerType}', self.answerAButton, index)
