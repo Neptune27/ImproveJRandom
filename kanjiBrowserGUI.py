@@ -18,8 +18,6 @@ import wordController
 from classType import JapanWords
 from jsonController import Settings
 
-# from importlib import reload
-
 settings = Settings()
 
 
